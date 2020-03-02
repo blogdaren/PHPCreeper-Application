@@ -1,0 +1,508 @@
+#!/usr/bin/env php
+<?php
+/**
+ * @script   Creeper.php
+ * @brief    PHPCreeper Application Assistant
+ * @author   blogdaren<blogdaren@163.com>
+ * @version  1.0.0
+ * @modify   2019-03-02
+ */
+
+require_once dirname(dirname(__FILE__)). '/Core/Constant.php';
+
+use PHPCreeper\Kernel\PHPCreeper;
+use Logger\Logger;
+use CustomTerminalColor\Color;
+
+class Creeper
+{
+    /**
+     * commands allowed
+     *
+     * @var private
+     */
+    static private $_validCommands = [
+        'list',
+        'make',
+        'drop',
+        'check',
+        'help',
+    ];
+
+    /**
+     * spider name
+     *
+     * @var public
+     */
+    static public $spider  = '';
+
+    /**
+     * command give by user
+     *
+     * @var public
+     */
+    static public $command = '';
+
+    /**
+     * @brief   boot entry
+     *
+     * @return  void
+     */
+    static public function boot()
+    {
+        $command = $GLOBALS['argv'][1] ?? 'help';
+        $spider  = $GLOBALS['argv'][2] ?? '';
+
+        self::setLanguageCode();
+
+        echo PHP_EOL;
+        Logger::crazy(Language::load('welcome'));
+        Logger::crazy(Language::load('contactAuthor'));
+        Logger::crazy('http://www.phpcreeper.com');
+        Logger::crazy('http://www.blogdaren.com');
+        Logger::crazy('http://github.com/blodaren');
+        self::$command = $command;
+        self::$spider  = ucfirst(strtolower($spider));
+
+        if('help' == self::$command || !in_array(self::$command, self::$_validCommands))
+        {
+            self::showHelp();
+            exit;
+        }
+
+        $check_result = self::checkSpider();
+        if(true !== $check_result)
+        {
+            Logger::error($check_result);
+            return false;
+        }
+
+        self::_run();
+    }
+
+    /**
+     * @brief    set language code
+     *
+     * @return   void
+     */
+    static public function setLanguageCode()
+    {
+        $option = $GLOBALS['argv'][3] ?? '--zh';
+        $option == '--en' && Language::$code = 'en';
+        $option == '--zh' && Language::$code = 'zh';
+    }
+
+    /**
+     * @brief   check spider
+     *
+     * @return  string | boolean
+     */
+    static public function checkSpider()
+    {
+        Logger::info(Language::load('checkSpider'));
+
+        if(empty(PHPCreeper::checkSpiderName(self::$spider)))
+        {
+            return  Language::load('invalidSpiderName');
+        }
+
+        return true;
+    }
+
+    /**
+     * @brief   check spider exist or not 
+     *
+     * @return  string | boolean
+     */
+    static public function checkSpiderExist()
+    {
+        if(is_dir(SPIDER_DIR . self::$spider) && file_exists(SPIDER_DIR . self::$spider))
+        {
+            Logger::info(Language::load('prepareSpiderDirectory'). SPIDER_DIR);
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @brief   run spider
+     *
+     * @return  void
+     */
+    static private function  _run()
+    {
+        switch(self::$command)
+        {
+            case 'list':
+                break;
+            case 'make':
+                $check_result = self::checkSpiderExist();
+                if(true === $check_result) 
+                {
+                    Logger::error(Language::load('spiderAlreadyExisted') . self::$spider);
+                    return false;
+                }
+
+                Logger::info(Language::load('createSpiderDirectory'));
+                $src_dir = SPIDER_DIR . '/Demo';
+
+                if(!file_exists($src_dir))
+                {
+                    Logger::error(Language::load('notFindDemoDirectory'));
+                    exit;
+                }
+
+                $dst_dir = SPIDER_DIR . self::$spider;
+                $cmd = "cp -R {$src_dir} {$dst_dir}";
+                exec($cmd, $buffer, $status); 
+                Logger::info(Language::load('createSpiderDirectoryOk'));
+                Logger::info(Language::load('washSpiderConfig'));
+
+                self::_washConfig();
+                Logger::info(Language::load('washSpiderConfigOk'));
+
+                Logger::info(Language::load('grantForSpiderDirectory'));
+                $spider_config_dir = $dst_dir . DIRECTORY_SEPARATOR . '/Config';
+                chmod($spider_config_dir, 0777);
+                Logger::info(Language::load('grantForSpiderDirectoryOk'));
+
+                Logger::info(Language::load('createGlobalStartScript'));
+                $global_start_script = dirname(APP_DIR) . DIRECTORY_SEPARATOR . strtolower(self::$spider) . ".php";
+                $code = self::getInitPHPCode();
+                file_put_contents($global_start_script, $code);
+                Logger::info(Language::load('createGlobalStartScriptOk'));
+
+                Logger::info(Language::load('createSpiderApplicationOk') . self::$spider);
+                Logger::crazy(Language::load('tryToRunApplication') . strtolower(self::$spider) . '.php start' . PHP_EOL);
+                break;
+            case 'drop':
+                $check_result = self::checkSpiderExist();
+                if(true !== $check_result) Logger::error(Language::load('spiderNotExisted') . self::$spider);
+                if(true === $check_result) Logger::error(Language::load('spiderAlreadyExisted') . self::$spider);
+
+                Logger::error(Language::load('notSupportForSecurityReason'));
+                Logger::error(Language::load('tryToCleanByHand'));
+                break;
+            case 'check':
+                $check_result = self::checkSpider();
+                if(true !== $check_result)
+                {
+                    Logger::error($check_result);
+                    return false;
+                }
+
+                $check_result = self::checkSpiderExist();
+                if(true !== $check_result) Logger::error(Language::load('spiderNotExisted') . self::$spider);
+                if(true === $check_result) Logger::error(Language::load('spiderAlreadyExisted') . self::$spider);
+                break;
+            case 'help':
+                self:showHelp();
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * @brief   wash spider config
+     *
+     * @return  void
+     */
+    static private function _washConfig()
+    {
+        //database.config
+        $database_file = SPIDER_DIR . self::$spider . '/Config/database.php';
+        $db_config = file_get_contents($database_file);
+        $db_config = preg_replace("/'Demo'/is", "'" . self::$spider . "'", $db_config);
+        file_put_contents($database_file, $db_config);
+    }
+
+    /**
+     * @brief    show help   
+     *
+     * @return   void 
+     */
+    static public function showHelp()
+    {
+        PHPCreeper::clearScreen();
+        self::showVersion();
+        self::showSynopsis();
+        self::showCommands();
+        self::showArguments();
+        self::showOptions();
+    }
+
+    /**
+     * @brief    show version    
+     *
+     * @return   void
+     */
+    static public function showVersion()
+    {
+        $version = Color::getColorfulText('PHPCreeper Application Assistant Version 1.0.0', 'white', 'blue', 'underline');
+        echo PHP_EOL. $version . PHP_EOL;
+    }
+
+    /**
+     * @brief    show synopsis   
+     *
+     * @return   void
+     */
+    static public function showSynopsis()
+    {
+        self::showTitle(PHP_EOL . 'Usage:');
+        self::showLine("php Application/Sbin/Creeper <Command> [Argument] [Options]");
+    }
+
+    /**
+     * @brief    show commands   
+     *
+     * @return   void
+     */
+    static public function showCommands()
+    {
+        self::showTitle('Command:');
+        self::showLineKeyAndValue("list",  "    used to list all the spider app made");
+        self::showLineKeyAndValue("make",  "    used to create the given spider app");
+        self::showLineKeyAndValue("drop",  "    used to remove the given spider app");
+        self::showLineKeyAndValue("check", "   used to check  the given spider app");
+        self::showLineKeyAndValue("help",  "    used to display this help message");
+    }
+
+    /**
+     * @brief    show arguments
+     *
+     * @return   void
+     */
+    static public function showArguments()
+    {
+        self::showTitle(PHP_EOL . 'Argument:');
+        self::showLineKeyAndValue("name  ", "  used to spicify the spider name" . PHP_EOL);
+    }
+
+    /**
+     * @brief    show options
+     *
+     * @return   void
+     */
+    static public function showOptions()
+    {
+        self::showTitle('Options:');
+        self::showLineKeyAndValue("--zh  ", "  bootstrap as chinese versoin mode");
+        self::showLineKeyAndValue("--en  ", "  bootstrap as english version mode" . PHP_EOL);
+    }
+
+    /**
+     * @brief    show title  
+     *
+     * @param    string  $title
+     *
+     * @return   void
+     */
+    static public function showTitle($title = '')
+    {
+        $text = $title . PHP_EOL;
+        $text = Color::getColorfulText($text, 'yellow', 'black');
+        echo $text;
+    }
+
+    /**
+     * @brief    show line   
+     *
+     * @param    string  $text
+     *
+     * @return   void
+     */
+    static public function showLine($text = '')
+    {
+        $text = "  " . $text . PHP_EOL;
+        $text = Color::getColorfulText($text, 'light_green', 'black');
+        echo $text . PHP_EOL;
+    }
+
+    /**
+     * @brief    showLineKeyAndValue    
+     *
+     * @param    string  $k
+     * @param    string  $v
+     *
+     * @return   void
+     */
+    static public function showLineKeyAndValue($k = '', $v = '')
+    {
+        self::showLineKey($k);
+        self::showLineValue($v);
+    }
+
+    /**
+     * @brief    showLineKey    
+     *
+     * @param    string  $k
+     *
+     * @return   void
+     */
+    static public function showLineKey($k = '')
+    {
+        $k = "  " . $k;
+        $k = Color::getColorfulText($k, 'light_green', 'black');
+        echo $k;
+    }
+
+    /**
+     * @brief    showLineValue  
+     *
+     * @param    string  $v
+     *
+     * @return   void
+     */
+    static public function showLineValue($v = '')
+    {
+        $v = "  " . $v;
+        $v = Color::getColorfulText($v, 'white', 'black');
+        echo $v . PHP_EOL;
+    }
+
+    /**
+     * @brief    get init php code 
+     *
+     * @return   string
+     */
+    static public function getInitPHPCode()
+    {
+        $code = "
+<?php
+/**
+ * @script   " . self::$spider . ".php" . "
+ * @brief    global.start.script
+ * @author   blogdaren<blogdaren@163.com>
+ * @version  1.0.0
+ * @modify   " . date('Y-m-d') . "
+ */
+require_once __DIR__ . '/Application/Core/Launcher.php';
+
+\PHPCreeperApp\Core\Launcher::start();
+            ";
+
+        return $code;
+    }
+
+}
+
+
+class Language
+{
+    /**
+     * language code
+     *
+     * @var string
+     */
+    static public $code = "zh";
+
+    /**
+     * @brief    loadChinese    
+     *
+     * @param    string  $key
+     *
+     * @return   string
+     */
+    static public function loadChinese($key = '')
+    {
+        $lang = array(
+            "welcome" => "欢迎使用爬山虎助手......",
+            "contactAuthor" => "有问题请联系金牛座......",
+            "checkSpider" => "开始校验新爬虫数据......",
+            "invalidSpiderName" => "请提供有效爬虫名称......",
+            "prepareSpiderDirectory" => "开始准备新爬虫目录:",
+            "spiderAlreadyExisted" => "该爬虫应用已经存在:",
+            "spiderNotExisted" => "该爬虫应用并不存在:",
+            "createSpiderDirectory" => "尝试创建新爬虫目录......",
+            "notFindDemoDirectory" => "糟检测不到Demo目录......",
+            "createSpiderDirectoryOk" => "成功创建新爬虫目录......",
+            "washSpiderConfig" => "尝试清洗新爬虫配置......",
+            "washSpiderConfigOk" => "成功清洗新爬虫配置......",
+            "grantForSpiderDirectory" => "尝试赋予配置目录读写权限",
+            "grantForSpiderDirectoryOk" => "成功赋予配置目录读写权限",
+            "createGlobalStartScript" => "尝试创建全局启动脚本....",
+            "createGlobalStartScriptOk" => "成功创建全局启动脚本....",
+            "createSpiderApplicationOk" => "成功创建新爬虫应用: ",
+            "tryToRunApplication" => "一切就绪小试下牛刀：php ",
+            "notSupportForSecurityReason" => "因安全原因暂不支持......",
+            "tryToCleanByHand" => "请手动清理爬虫数据......",
+        );
+
+        if(!array_key_exists($key, $lang)) return '';
+
+        return $lang[$key];
+    }
+
+    /**
+     * @brief    loadEnglish    
+     *
+     * @param    string  $key
+     *
+     * @return   string
+     */
+    static public function loadEnglish($key = '')
+    {
+        $lang = array(
+            "welcome" => "welcome to use PHPCreeper Application Assistant......",
+            "contactAuthor" => "feel free to contact blogdaren@163.com if any question......",
+            "checkSpider" => "prepare to check the spider data......",
+            "invalidSpiderName" => "please provide valid spider name ......",
+            "prepareSpiderDirectory" => "prepare spider directory: ",
+            "spiderAlreadyExisted" => "find out the spider already exists: ",
+            "spiderNotExisted" => "find out the spider is not exist：",
+            "createSpiderDirectory" => "try to create spider directory......",
+            "notFindDemoDirectory" => "counld not find the Demo directory......",
+            "createSpiderDirectoryOk" => "create the spider config successfully......",
+            "washSpiderConfig" => "try to wash the spider config......",
+            "washSpiderConfigOk" => "wash the spider config successfully......",
+            "grantForSpiderDirectory" => "try to grant r/w right for config directory......",
+            "grantForSpiderDirectoryOk" => "grant r/w right for config directory successfully......",
+            "createGlobalStartScript" => "try to create global startup script....",
+            "createGlobalStartScriptOk" => "create global startup script successfully......",
+            "createSpiderApplicationOk" => "create spider application successfully: ",
+            "tryToRunApplication" => "well, everyting is ready, try to run：php ",
+            "notSupportForSecurityReason" => "not yet support for security reasons......",
+            "tryToCleanByHand" => "plz try to clean spider data by hand......",
+        );
+
+        if(!array_key_exists($key, $lang)) return '';
+
+        return $lang[$key];
+    }
+
+    /**
+     * @brief    load  language 
+     *
+     * @param    string  $key
+     *
+     * @return   string
+     */
+    static public function load($key = '')
+    {
+        switch(self::$code)
+        {
+            case 'zh';
+                $lang = self::loadChinese($key);
+                break;
+            case 'en';
+                $lang = self::loadEnglish($key);
+                break;
+            default:
+                $lang = '';
+                break;
+        }
+
+        return $lang;
+    }
+}
+
+
+
+
+Creeper::boot();
+
+
+
