@@ -3,7 +3,7 @@
 ## What is it
 
 PHPCreeper-Application is a special spider application framework
-which is closely related to `PHPCreeper`, it is mainly used to
+which works together with [PHPCreeper](https://github.com/blogdaren/phpcreeper), it is mainly used to
 improve your crawling job efficiency.
 
 ## How to use
