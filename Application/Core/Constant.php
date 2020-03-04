@@ -11,7 +11,7 @@
 !defined("USE_PHPCREEPER_APPLICATION_FRAMEWORK") && define("USE_PHPCREEPER_APPLICATION_FRAMEWORK", true);
 
 //root.dir
-!defined("ROOT_DIR") && define("ROOT_DIR", dirname(dirname(dirname(__FILE__))));
+!defined("ROOT_DIR") && define("ROOT_DIR", dirname(__FILE__, 3));
 
 //app.dir
 !defined("APP_DIR") && define("APP_DIR", ROOT_DIR . '/Application/');

@@ -8,7 +8,7 @@
  * @modify   2019-03-02
  */
 
-require_once dirname(dirname(__FILE__)). '/Core/Constant.php';
+require_once dirname(__FILE__, 2). '/Core/Constant.php';
 
 use PHPCreeper\Kernel\PHPCreeper;
 use Logger\Logger;

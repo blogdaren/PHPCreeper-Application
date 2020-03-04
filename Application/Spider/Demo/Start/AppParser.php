@@ -9,7 +9,7 @@
 
 namespace PHPCreeperApp\Spider\Baidu\Start;
 
-require_once dirname(dirname(dirname(dirname(__FILE__)))). '/Core/Launcher.php';
+require_once dirname(__FILE__, 4) . '/Core/Launcher.php';
 
 use PHPCreeperApp\Core\Launcher;
 use PHPCreeper\Kernel\PHPCreeper;
