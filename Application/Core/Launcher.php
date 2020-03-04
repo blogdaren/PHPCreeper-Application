@@ -111,7 +111,7 @@ class Launcher
      */
     static public function getStartScript($name = '')
     {
-        empty($name) && PHPCreeper::showHelpByeBye('plz give the valid spider name, try to read the manual if feel puzzled.');
+        empty($name) && PHPCreeper::showHelpByeBye('please give the valid spider name, try to read the manual if feel puzzled.');
 
         $scripts = [];
         foreach(glob(APP_DIR . '/Spider/' . ucfirst(strtolower($name)). '/Start/*.php', GLOB_BRACE) as $start_file)
@@ -126,7 +126,7 @@ class Launcher
         //when configure run as single worker
         if(isset(self::$_config['main']['multi_worker']) && false === self::$_config['main']['multi_worker'])
         {
-            return ['downloader'];
+            return ['AppDownloader'];
         }
 
         //when configure run as multi worker
@@ -151,14 +151,14 @@ class Launcher
     static public function start($name = '')
     {
         $spider = self::getSpiderName($name);
-        empty($spider) && PHPCreeper::showHelpByeBye('plz give the valid spider name, try to read the manual if feel puzzled.');
+        empty($spider) && PHPCreeper::showHelpByeBye('please give the valid spider name, try to read the manual if feel puzzled.');
 
         //must mark this script run as global
         define('GLOBAL_START', 1);
 
         $flag = false;
         $scripts = self::getStartScript($spider);
-        empty($scripts) && PHPCreeper::showHelpByeBye('you are not allowed to run any scripts, plz check the `main` config file.');
+        empty($scripts) && PHPCreeper::showHelpByeBye('all the start scripts seem to be disabled, please check the `main` config file.');
 
         foreach($scripts as $script)
         {
@@ -170,7 +170,7 @@ class Launcher
             }
         }
 
-        false === $flag && PHPCreeper::showHelpByeBye("the spider name given is invalid [$spider], try to read the manual if feel puzzled.");
+        false === $flag && PHPCreeper::showHelpByeBye("couldn't find the start script: {$script}");
 
         $scripts = implode(',', $scripts);
 
