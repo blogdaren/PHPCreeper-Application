@@ -1,9 +1,8 @@
 {
-    "name": "blogdaren/PHPCreeper-Application",
+    "name": "blogdaren/phpcreeper-application",
     "keywords": ["spider", "crawler"],
     "homepage": "http://www.phpcreeper.com",
     "description": "A special spider application framework used to improve your crawling job efficiency",
-    "license": "MIT", 
     "type": "project",
     "license": "MIT",
     "authors": [
