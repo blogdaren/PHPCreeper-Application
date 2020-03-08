@@ -4,15 +4,15 @@
  * @script   Creeper.php
  * @brief    PHPCreeper Application Assistant
  * @author   blogdaren<blogdaren@163.com>
- * @version  1.0.0
+ * @version  1.0.1
  * @modify   2019-03-02
  */
 
 require_once dirname(__FILE__, 2). '/Core/Constant.php';
 
 use PHPCreeper\Kernel\PHPCreeper;
-use Logger\Logger;
 use CustomTerminalColor\Color;
+use Logger\Logger;
 
 class Creeper
 {
@@ -53,31 +53,64 @@ class Creeper
         $command = $GLOBALS['argv'][1] ?? 'help';
         $spider  = $GLOBALS['argv'][2] ?? '';
 
+        //set language code
         self::setLanguageCode();
 
         echo PHP_EOL;
         Logger::crazy(Language::load('welcome'));
         Logger::crazy(Language::load('contactAuthor'));
-        Logger::crazy('http://www.phpcreeper.com');
-        Logger::crazy('http://www.blogdaren.com');
-        Logger::crazy('http://github.com/blodaren');
+        Logger::crazy(PHPCREEPER_OFFICIAL_SITE);
+        Logger::crazy(AUTHOR_BLOG_URL);
+        Logger::crazy(AUTHOR_GITHUB_URL);
+
+        //check environment
+        $result = self::checkEnvironment();
+        if(true !== $result)
+        {
+            Logger::error($result . PHP_EOL);
+            exit;
+        }
+
         self::$command = $command;
         self::$spider  = ucfirst(strtolower($spider));
 
+        //show help
         if('help' == self::$command || !in_array(self::$command, self::$_validCommands))
         {
             self::showHelp();
             exit;
         }
 
-        $check_result = self::checkSpider();
-        if(true !== $check_result)
+        //start run
+        self::_run();
+    }
+
+    /**
+     * @brief    check execute environment 
+     *
+     * @return   boolean | exit
+     */
+    static public function checkEnvironment()
+    {
+        //check system platform
+        if('\\' === DIRECTORY_SEPARATOR) 
         {
-            Logger::error($check_result);
-            return false;
+            return Language::load('runLinuxLikeSystemAllowed');
         }
 
-        self::_run();
+        //check sapi
+        if(strtolower(PHP_SAPI) != 'cli')
+        {
+            return Language::load('runCommandLineAllowed');
+        }
+
+        //check php version
+        if(version_compare(PHP_VERSION, '7.0.0', 'lt')) 
+        {
+            return Language::load('phpVersionInvalid');
+        }
+
+        return true;
     }
 
     /**
@@ -135,12 +168,21 @@ class Creeper
         switch(self::$command)
         {
             case 'list':
+                Logger::error(Language::load('toBeImplemented') . PHP_EOL);
+                return false;
                 break;
             case 'make':
+                $check_result = self::checkSpider();
+                if(true !== $check_result)
+                {
+                    Logger::error($check_result . PHP_EOL);
+                    return false;
+                }
+
                 $check_result = self::checkSpiderExist();
                 if(true === $check_result) 
                 {
-                    Logger::error(Language::load('spiderAlreadyExisted') . self::$spider);
+                    Logger::error(Language::load('spiderAlreadyExisted') . self::$spider . PHP_EOL);
                     return false;
                 }
 
@@ -177,24 +219,31 @@ class Creeper
                 Logger::crazy(Language::load('tryToRunApplication') . strtolower(self::$spider) . '.php start' . PHP_EOL);
                 break;
             case 'drop':
-                $check_result = self::checkSpiderExist();
-                if(true !== $check_result) Logger::error(Language::load('spiderNotExisted') . self::$spider);
-                if(true === $check_result) Logger::error(Language::load('spiderAlreadyExisted') . self::$spider);
-
-                Logger::error(Language::load('notSupportForSecurityReason'));
-                Logger::error(Language::load('tryToCleanByHand'));
-                break;
-            case 'check':
                 $check_result = self::checkSpider();
                 if(true !== $check_result)
                 {
-                    Logger::error($check_result);
+                    Logger::error($check_result . PHP_EOL);
                     return false;
                 }
 
                 $check_result = self::checkSpiderExist();
                 if(true !== $check_result) Logger::error(Language::load('spiderNotExisted') . self::$spider);
                 if(true === $check_result) Logger::error(Language::load('spiderAlreadyExisted') . self::$spider);
+
+                Logger::error(Language::load('notSupportForSecurityReason'));
+                Logger::error(Language::load('tryToCleanByHand') . PHP_EOL);
+                break;
+            case 'check':
+                $check_result = self::checkSpider();
+                if(true !== $check_result)
+                {
+                    Logger::error($check_result . PHP_EOL);
+                    return false;
+                }
+
+                $check_result = self::checkSpiderExist();
+                if(true !== $check_result) Logger::error(Language::load('spiderNotExisted') . self::$spider . PHP_EOL);
+                if(true === $check_result) Logger::error(Language::load('spiderAlreadyExisted') . self::$spider . PHP_EOL);
                 break;
             case 'help':
                 self:showHelp();
@@ -240,7 +289,7 @@ class Creeper
      */
     static public function showVersion()
     {
-        $version = Color::getColorfulText('PHPCreeper Application Assistant Version 1.0.0', 'white', 'blue', 'underline');
+        $version = Color::getColorfulText('PHPCreeper Application Assistant Version 1.0.1', 'white', 'blue', 'underline');
         echo PHP_EOL. $version . PHP_EOL;
     }
 
@@ -376,7 +425,7 @@ class Creeper
  * @script   " . self::$spider . ".php" . "
  * @brief    global.start.script
  * @author   blogdaren<blogdaren@163.com>
- * @version  1.0.0
+ * @version  1.0.1
  * @modify   " . date('Y-m-d') . "
  */
 require_once __DIR__ . '/Application/Core/Launcher.php';
@@ -429,6 +478,10 @@ class Language
             "tryToRunApplication" => "一切就绪小试下牛刀：php ",
             "notSupportForSecurityReason" => "因安全原因暂不支持......",
             "tryToCleanByHand" => "请手动清理爬虫数据......",
+            "runLinuxLikeSystemAllowed" => "暂不支持windows平台......",
+            "runCommandLineAllowed" => "只能在命令行运行脚本......",
+            "phpVersionInvalid" => "PHP版本必须大于等于7.0.0",
+            "toBeImplemented" => "该项功能正在开发中.....",
         );
 
         if(!array_key_exists($key, $lang)) return '';
@@ -466,6 +519,10 @@ class Language
             "tryToRunApplication" => "well, everyting is ready, try to run：php ",
             "notSupportForSecurityReason" => "not yet support for security reasons......",
             "tryToCleanByHand" => "plz try to clean spider data by hand......",
+            "runLinuxLikeSystemAllowed" => "not support windows platform yet......",
+            "runCommandLineAllowed" => "only allowed to run on the command line",
+            "phpVersionInvalid" => "PHP version must greater than >= 7.0.0",
+            "toBeImplemented" => "this function is to be implemented",
         );
 
         if(!array_key_exists($key, $lang)) return '';

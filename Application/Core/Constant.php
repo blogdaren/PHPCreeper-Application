@@ -25,6 +25,15 @@
 //spider.dir
 !defined("SPIDER_DIR") && define("SPIDER_DIR", APP_DIR . '/Spider/');
 
+//phpcreeper.official.site
+!defined("PHPCREEPER_OFFICIAL_SITE") && define("PHPCREEPER_OFFICIAL_SITE", 'http://www.phpcreeper.com');
+
+//author.blog.url
+!defined("AUTHOR_BLOG_URL") && define("AUTHOR_BLOG_URL", 'http://www.blogdaren.com');
+
+//author.github.url
+!defined("AUTHOR_GITHUB_URL") && define("AUTHOR_GITHUB_URL", 'https://github.com/blogdaren');
+
 //autoloader.debug
 //define('AUTOLOADER_DEBUG', 1);
 
