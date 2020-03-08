@@ -1,8 +1,6 @@
 {
     "name": "blogdaren/phpcreeper-application",
-    "keywords": ["spider", "crawler"],
-    "homepage": "http://www.phpcreeper.com",
-    "description": "A special spider application framework used to improve your crawling job efficiency",
+    "description": "phpcreeper application framework",
     "type": "project",
     "license": "MIT",
     "authors": [
@@ -13,8 +11,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "PHPCreeperApp\\" : "Application/"
+            "PHPCreeperApp\\"  : "Application/"
         }
-    },
-    "minimum-stability": "dev"
+    }
 }
