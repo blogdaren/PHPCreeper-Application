@@ -94,6 +94,7 @@ class AppProducer
      */
     public function onProducerStart($producer)
     {
+        //$db = $producer->getDbo('test');
     }
 
     /**
