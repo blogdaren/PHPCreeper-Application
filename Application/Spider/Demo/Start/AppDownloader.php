@@ -13,9 +13,7 @@ require_once dirname(__FILE__, 4) . '/Core/Launcher.php';
 
 use PHPCreeperApp\Core\Launcher;
 use PHPCreeper\Kernel\PHPCreeper;
-use PHPCreeper\Kernel\Task;
 use PHPCreeper\Downloader;
-use PHPCreeper\Kernel\Library\Helper\Benchmark;
 use Configurator\Configurator;
 use Logger\Logger;
 
@@ -39,18 +37,6 @@ class AppDownloader
      *  @var array
      */
     private $_config = array();
-
-    /**
-     *  ping interval
-     *  @var int
-     */
-    public $pingInterval = 0;
-
-    /**
-     *  send ping data to client
-     *  @var string
-     */
-    public $pingData = '';
 
     /**
      * @brief   get single instance 
@@ -108,24 +94,27 @@ class AppDownloader
      */
     public function onDownloaderStart($downloader)
     {
+        //Plugin Usage
         /*
-         *PHPCreeper::installPlugin(\PHPCreeper\App\Plugin\MyHttpClient::class);
+         *PHPCreeper::installPlugin(\PHPCreeperApp\Plugin\MyHttpClient::class);
          *pprint($downloader->get('https://www.baidu.com'));
          *return false;
          */
 
+        //Create One Task
         /*
          *$task = array(
          *    'url' => 'https://baike.baidu.com/item/%E4%B8%8A%E6%B5%B7/114606',
          *    'rule' => array(
-         *        '普通飞机场' => ['dl.basicInfo-right dd.basicInfo-item.value:eq(3)', 'text'],
-         *        '普通火车站' => ['dl.basicInfo-right dd.basicInfo-item.value:eq(4)', 'text'],
+         *        '已提取字段1' => ['dl.basicInfo-right dd.basicInfo-item.value:eq(3)', 'text'],
+         *        '已提取字段2' => ['dl.basicInfo-right dd.basicInfo-item.value:eq(4)', 'text'],
          *    ),
          *);
-         *Task::newInstance($downloader)->createTask($task);
+         *$downloader->newTaskMan()->createTask($task);
          */
 
 
+        //Create Multi Task
         /*
          *$task = array(
          *    'url' => array(
@@ -133,18 +122,19 @@ class AppDownloader
          *    ),
          *    'rule' => array(
          *        'r1' => array(
-         *            '豪华飞机场' => ['dl.basicInfo-right dd.basicInfo-item.value:eq(5)', 'text'],
-         *            '豪华火车站' => ['dl.basicInfo-right dd.basicInfo-item.value:eq(6)', 'text'],
+         *            '已提取字段1' => ['dl.basicInfo-right dd.basicInfo-item.value:eq(5)', 'text'],
+         *            '已提取字段2' => ['dl.basicInfo-right dd.basicInfo-item.value:eq(6)', 'text'],
          *        ),
          *    ),
          *);
-         *Task::newInstance($downloader)->createMultiTask($task);
+         *$downloader->newTaskMan()->createMultiTask($task);
          */
 
 
+        //Create Multi Task
         /*
          *$task = Configurator::get('globalConfig/main/task');
-         *Task::newInstance($downloader)->createMultiTask($task);
+         *$downloader->newTaskMan()->createMultiTask($task);
          */
     }
 
@@ -222,8 +212,16 @@ class AppDownloader
      */
     public function onAfterDownload($downloader, $download_data, $task)
     {
+        //!!!Attention!!!
+        //in theory, we can do the extract job ethier within this callback 
+        //or with the `AppParser` callback related, but we strongly recommend
+        //that you'd better do it with the `AppParser` callback related. 
+        //bcz the extract job not belongs to here, so called each worker performs its own functions.
+        //however, you must do the extract job here if you run the worker as `SINGLE WORKER` mode.
+
+
         //$fields = $downloader->extractor->setHtml($download_data)->setRule($task['rule'])->extract(); 
-        //pprint(__METHOD__, $download_data, $fields);
+        //pprint(__METHOD__, $fields);
     }
 
 }
