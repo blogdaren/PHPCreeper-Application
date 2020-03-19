@@ -86,6 +86,20 @@ class Creeper
     }
 
     /**
+     * operation confirm 
+     *
+     * @return string  
+     */
+    static public function confirm()
+    {
+        $fp = fopen('php://stdin', 'r');
+        $input = fgets($fp, 255);
+        fclose($fp);
+
+        return $input;
+    }
+
+    /**
      * @brief    check execute environment 
      *
      * @return   boolean | exit
@@ -227,11 +241,42 @@ class Creeper
                 }
 
                 $check_result = self::checkSpiderExist();
-                if(true !== $check_result) Logger::error(Language::load('spiderNotExisted') . self::$spider);
+                if(true !== $check_result) 
+                {
+                    Logger::error(Language::load('spiderNotExisted') . self::$spider . PHP_EOL);
+                    return false;
+                }
+
                 if(true === $check_result) Logger::error(Language::load('spiderAlreadyExisted') . self::$spider);
 
-                Logger::error(Language::load('notSupportForSecurityReason'));
-                Logger::error(Language::load('tryToCleanByHand') . PHP_EOL);
+                if('demo' === strtolower(self::$spider))
+                {
+                    Logger::error(Language::load('refusedToDropBuiltInApp') . self::$spider . PHP_EOL);
+                    return false;
+                }
+
+                Logger::error(Language::load('dangerDropOperation'));
+                $op = trim(self::confirm());
+                if('y' != $op) 
+                {
+                    Logger::crazy(Language::load('discardDropOperation') . PHP_EOL);
+                    return false;
+                }
+
+                $dst_dir = SPIDER_DIR . self::$spider;
+                @exec("rm -rf {$dst_dir}", $output, $status);
+
+                if(0 === $status) 
+                {
+                    Logger::error(Language::load('dropSpiderSuccess') . self::$spider . PHP_EOL);
+                }
+                else
+                {
+                    Logger::error(Language::load('caughtUnexpectedProblem') . self::$spider . PHP_EOL);
+                }
+
+                //Logger::error(Language::load('notSupportForSecurityReason'));
+                //Logger::error(Language::load('tryToCleanByHand') . PHP_EOL);
                 break;
             case 'check':
                 $check_result = self::checkSpider();
@@ -462,9 +507,9 @@ class Language
             "contactAuthor" => "有问题请联系金牛座......",
             "checkSpider" => "开始校验新爬虫数据......",
             "invalidSpiderName" => "请提供有效爬虫名称......",
-            "prepareSpiderDirectory" => "开始准备新爬虫目录:",
-            "spiderAlreadyExisted" => "该爬虫应用已经存在:",
-            "spiderNotExisted" => "该爬虫应用并不存在:",
+            "prepareSpiderDirectory" => "开始准备新爬虫目录: ",
+            "spiderAlreadyExisted" => "该爬虫应用已经存在: ",
+            "spiderNotExisted" => "该爬虫应用并不存在: ",
             "createSpiderDirectory" => "尝试创建新爬虫目录......",
             "notFindDemoDirectory" => "糟检测不到Demo目录......",
             "createSpiderDirectoryOk" => "成功创建新爬虫目录......",
@@ -482,6 +527,11 @@ class Language
             "runCommandLineAllowed" => "只能在命令行运行脚本......",
             "phpVersionInvalid" => "PHP版本必须大于等于7.0.0",
             "toBeImplemented" => "该项功能正在开发中.....",
+            "dangerDropOperation" => "危险行为: 确定要删除吗? 【y|n】",
+            "discardDropOperation" => "选择放弃: 爬虫应用删除失败",
+            "dropSpiderSuccess" => "已经成功删除爬虫应用: ",
+            "caughtUnexpectedProblem" => "删除爬虫时发生了意外",
+            "refusedToDropBuiltInApp" => "拒绝删内置默认应用: ",
         );
 
         if(!array_key_exists($key, $lang)) return '';
@@ -523,6 +573,11 @@ class Language
             "runCommandLineAllowed" => "only allowed to run on the command line",
             "phpVersionInvalid" => "PHP version must greater than >= 7.0.0",
             "toBeImplemented" => "this function is to be implemented",
+            "dangerDropOperation" => "dangerours drop action: continue? 【y|n】",
+            "discardDropOperation" => "discard drop action: drop failed",
+            "dropSpiderSuccess" => "drop the spider app successfully: ",
+            "caughtUnexpectedProblem" => "some unexpected problem occured when try to drop spider",
+            "refusedToDropBuiltInApp" => "refused to drop the built-in spider app: ",
         );
 
         if(!array_key_exists($key, $lang)) return '';
