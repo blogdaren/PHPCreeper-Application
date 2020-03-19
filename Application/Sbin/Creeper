@@ -4,20 +4,21 @@
  * @script   Creeper.php
  * @brief    PHPCreeper Application Assistant
  * @author   blogdaren<blogdaren@163.com>
- * @version  1.0.1
- * @modify   2019-03-02
+ * @version  1.0.3
+ * @modify   2019-03-19
  */
 
 require_once dirname(__FILE__, 2). '/Core/Constant.php';
 
 use PHPCreeper\Kernel\PHPCreeper;
+use PHPCreeperApp\Core\Launcher;
 use CustomTerminalColor\Color;
 use Logger\Logger;
 
 class Creeper
 {
     /**
-     * commands allowed
+     * valid commands
      *
      * @var private
      */
@@ -255,6 +256,31 @@ class Creeper
                     return false;
                 }
 
+                //refuse to drop the running application
+                $spider = self::$spider;
+                $spider = Launcher::getSpiderName($spider);
+                $scripts = Launcher::getStartScript($spider);
+                foreach($scripts as $script)
+                {
+                    $cmd = "ps aux | grep -i {$spider} | grep -i {$script} | grep -v grep | grep -i 'WorkerMan: master process'";
+                    @exec($cmd, $output, $status);
+                    if(!empty($output))
+                    {
+                        Logger::error(Language::load('refusedToDropRunningApp') . self::$spider . PHP_EOL);
+                        return false;
+                    }
+                }
+
+                //refuse to drop the running application
+                $spider = self::$spider;
+                $cmd = "ps aux | grep -i {$spider} | grep -v grep | grep -i 'WorkerMan: master process'";
+                @exec($cmd, $output, $status);
+                if(!empty($output))
+                {
+                    Logger::error(Language::load('refusedToDropRunningApp') . self::$spider . PHP_EOL);
+                    return false;
+                }
+
                 Logger::error(Language::load('dangerDropOperation'));
                 $op = trim(self::confirm());
                 if('y' != $op) 
@@ -263,17 +289,18 @@ class Creeper
                     return false;
                 }
 
+                //try to drop the spider application
                 $dst_dir = SPIDER_DIR . self::$spider;
-                @exec("rm -rf {$dst_dir}", $output, $status);
+                $global_start_script = ROOT_DIR . DIRECTORY_SEPARATOR . strtolower(self::$spider) . ".php";
+                @exec("rm -rf {$dst_dir}; rm -f {$global_start_script};", $output, $status);
 
-                if(0 === $status) 
-                {
-                    Logger::error(Language::load('dropSpiderSuccess') . self::$spider . PHP_EOL);
-                }
-                else
+                if(0 <> $status) 
                 {
                     Logger::error(Language::load('caughtUnexpectedProblem') . self::$spider . PHP_EOL);
+                    return false;
                 }
+
+                Logger::error(Language::load('dropSpiderSuccess') . self::$spider . PHP_EOL);
 
                 //Logger::error(Language::load('notSupportForSecurityReason'));
                 //Logger::error(Language::load('tryToCleanByHand') . PHP_EOL);
@@ -470,7 +497,7 @@ class Creeper
  * @script   " . self::$spider . ".php" . "
  * @brief    global.start.script
  * @author   blogdaren<blogdaren@163.com>
- * @version  1.0.1
+ * @version  1.0.3
  * @modify   " . date('Y-m-d') . "
  */
 require_once __DIR__ . '/Application/Core/Launcher.php';
@@ -532,6 +559,7 @@ class Language
             "dropSpiderSuccess" => "已经成功删除爬虫应用: ",
             "caughtUnexpectedProblem" => "删除爬虫时发生了意外",
             "refusedToDropBuiltInApp" => "拒绝删内置默认应用: ",
+            "refusedToDropRunningApp" => "拒绝删运行中的应用: ",
         );
 
         if(!array_key_exists($key, $lang)) return '';
@@ -578,6 +606,7 @@ class Language
             "dropSpiderSuccess" => "drop the spider app successfully: ",
             "caughtUnexpectedProblem" => "some unexpected problem occured when try to drop spider",
             "refusedToDropBuiltInApp" => "refused to drop the built-in spider app: ",
+            "refusedToDropRunningApp" => "refused to drop the running spider app: ",
         );
 
         if(!array_key_exists($key, $lang)) return '';
