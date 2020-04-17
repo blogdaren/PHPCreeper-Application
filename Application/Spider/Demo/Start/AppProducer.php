@@ -35,13 +35,6 @@ class AppProducer
     protected $_producer;
 
     /**
-     *  producer configuration
-     *
-     *  @var array
-     */
-    private $_config = array();
-
-    /**
      * @brief   single instance 
      *
      * @return  object
@@ -63,11 +56,12 @@ class AppProducer
      */
     public function start($spider = '')
     {
-        //producer config
-        $this->_config = Launcher::getSpiderConfig($spider);
-
-        //producer object
+        //producer instance
         $this->_producer = new Producer();
+
+        //producer config
+        $config = Launcher::getSpiderConfig($spider);
+        $this->_producer->setConfig($config);
 
         //producer name
         $this->_producer->setName('producer1');
@@ -79,9 +73,6 @@ class AppProducer
         $this->_producer->onProducerStart   = array($this, 'onProducerStart');
         $this->_producer->onProducerStop    = array($this, 'onProducerStop');
         $this->_producer->onProducerReload  = array($this, 'onProducerReload');
-
-        //boot producer
-        $this->_producer->boot($this->_config);
     }
 
 

@@ -33,12 +33,6 @@ class AppDownloader
     protected $_downloader;
 
     /**
-     *  configuration
-     *  @var array
-     */
-    private $_config = array();
-
-    /**
      * @brief   get single instance 
      *
      * @return  object
@@ -60,11 +54,12 @@ class AppDownloader
      */
     public function start($spider = '')
     {
-        //downloader config
-        $this->_config = Launcher::getSpiderConfig($spider);
-
-        //downloader object
+        //downloader instance
         $this->_downloader = new Downloader();
+
+        //downloader config
+        $config = Launcher::getSpiderConfig($spider);
+        $this->_downloader->setConfig($config);
 
         //downloader name
         $this->_downloader->setName('downloader1');
@@ -80,9 +75,6 @@ class AppDownloader
         $this->_downloader->onBeforeDownload    = array($this, 'onBeforeDownload');
         $this->_downloader->onStartDownload     = array($this, 'onStartDownload');
         $this->_downloader->onAfterDownload     = array($this, 'onAfterDownload');
-
-        //boot downloader
-        $this->_downloader->boot($this->_config);
     }
 
     /**

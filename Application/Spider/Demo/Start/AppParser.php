@@ -34,12 +34,6 @@ class AppParser
     protected $_parser;
 
     /**
-     *  configuration
-     *  @var array
-     */
-    private $_config = array();
-
-    /**
      *  ping interval
      *  @var int
      */
@@ -73,11 +67,12 @@ class AppParser
      */
     public function start($spider = '')
     {
-        //parser config
-        $this->_config = Launcher::getSpiderConfig($spider);
-
-        //parser object
+        //parser instance
         $this->_parser = new Parser();
+
+        //parser config
+        $config = Launcher::getSpiderConfig($spider);
+        $this->_parser->setConfig($config);
 
         //parser name
         $this->_parser->setName('parser1');
@@ -92,11 +87,7 @@ class AppParser
         $this->_parser->onParserMessage = array($this, 'onParserMessage');
         $this->_parser->onParserFindUrl = array($this, 'onParserFindUrl');
         $this->_parser->onParserExtractField = array($this, 'onParserExtractField');
-
-        //boot parser
-        $this->_parser->boot($this->_config);
     }
-
 
     /**
      * @brief    onParserStart  

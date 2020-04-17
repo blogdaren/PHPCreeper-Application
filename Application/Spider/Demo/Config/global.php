@@ -11,6 +11,9 @@
 /** !!! hey, don't try to modify this file unless you understand what u are doing !!! **/
 /** !!! hey, don't try to modify this file unless you understand what u are doing !!! **/
 
+/** !!! hey, don't try to delete this line unless you understand what u are doing !!! **/
+!defined('USE_PHPCREEPER_APPLICATION_FRAMEWORK') && define('USE_PHPCREEPER_APPLICATION_FRAMEWORK', 1);
+/** !!! hey, don't try to delete this line unless you understand what u are doing !!! **/
 
 $main_config = $db_config = [];
 $main_config_file = __DIR__ . '/main.php';
