@@ -11,10 +11,6 @@ return array(
             ),
         ),
     ),
-    'cache' => array(
-        'enabled'   => false,
-        'directory' => '/tmp/logs/data/' . date('Ymd'),
-    ),
 );
 
 
