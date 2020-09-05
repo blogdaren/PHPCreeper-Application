@@ -98,6 +98,18 @@ class AppParser
      */
     public function onParserStart($parser)
     {
+        //$db = $producer->getDbo('test');
+        $html = "<div><a href='http://www.phpcreeper.com' id='site'>PHPCreeper</a></div>";
+        $rule = array(
+            '链接标签' => ['div', 'html'],
+            '链接文本' => ['#site', 'text'],
+            '链接地址' => ['#site', 'href'],
+            '回调函数' => ['/<a .*?>(.*)<\/a>/is', 'preg', [], function($field_name, $data){
+                return 'Hello ' . $data[1];
+            }],
+        );
+        $data = $parser->extractField($html, $rule, 'rule1');
+        pprint($data['rule1']);
     }
 
     /**
@@ -180,7 +192,7 @@ class AppParser
 AppParser::getInstance()->start($spider ?? getSpiderName());
 
 //run all phpcreeper instance
-!defined('GLOBAL_START') && PHPCreeper::runAll();
+!defined('GLOBAL_START') && PHPCreeper::start();
 
 
 

@@ -117,7 +117,7 @@ class AppProducer
 AppProducer::getInstance()->start($spider ?? getSpiderName());
 
 //run all phpcreeper instance
-!defined('GLOBAL_START') && PHPCreeper::runAll();
+!defined('GLOBAL_START') && PHPCreeper::start();
 
 
 
