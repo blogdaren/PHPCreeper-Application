@@ -183,8 +183,13 @@ class Creeper
         switch(self::$command)
         {
             case 'list':
-                Logger::error(Language::load('toBeImplemented') . PHP_EOL);
-                return false;
+                Logger::info(Language::load('showAppList'));
+                $src_dir = SPIDER_DIR;
+                $cmd = "ls -l {$src_dir}";
+                exec($cmd, $buffer, $status); 
+                if(isset($buffer[0])) unset($buffer[0]);
+                pprint($buffer);
+                echo PHP_EOL;
                 break;
             case 'make':
                 $check_result = self::checkSpider();
@@ -197,7 +202,8 @@ class Creeper
                 $check_result = self::checkSpiderExist();
                 if(true === $check_result) 
                 {
-                    Logger::error(Language::load('spiderAlreadyExisted') . self::$spider . PHP_EOL);
+                    Logger::error(Language::load('spiderAlreadyExisted') . self::$spider);
+                    echo PHP_EOL;
                     return false;
                 }
 
@@ -213,6 +219,13 @@ class Creeper
                 $dst_dir = SPIDER_DIR . self::$spider;
                 $cmd = "cp -R {$src_dir} {$dst_dir}";
                 exec($cmd, $buffer, $status); 
+
+                foreach(glob($dst_dir . "/Start/*.php", GLOB_BRACE) as $start_file)
+                {   
+                    $start_files[] = $start_file;
+                    file_put_contents($start_file, str_replace('Demo', self::$spider, file_get_contents($start_file)));
+                } 
+
                 Logger::info(Language::load('createSpiderDirectoryOk'));
                 Logger::info(Language::load('washSpiderConfig'));
 
@@ -232,6 +245,7 @@ class Creeper
 
                 Logger::info(Language::load('createSpiderApplicationOk') . self::$spider);
                 Logger::crazy(Language::load('tryToRunApplication') . strtolower(self::$spider) . '.php start' . PHP_EOL);
+                echo PHP_EOL;
                 break;
             case 'drop':
                 $check_result = self::checkSpider();
@@ -244,7 +258,7 @@ class Creeper
                 $check_result = self::checkSpiderExist();
                 if(true !== $check_result) 
                 {
-                    Logger::error(Language::load('spiderNotExisted') . self::$spider . PHP_EOL);
+                    Logger::warn(Language::load('spiderNotExisted') . self::$spider . PHP_EOL);
                     return false;
                 }
 
@@ -530,8 +544,8 @@ class Language
     static public function loadChinese($key = '')
     {
         $lang = array(
-            "welcome" => "欢迎使用爬山虎助手......",
-            "contactAuthor" => "有问题请联系金牛座......",
+            "welcome" => "欢迎使用爬山虎应用开发助手......",
+            "contactAuthor" => "有问题请联系: blogdaren@163.com",
             "checkSpider" => "开始校验新爬虫数据......",
             "invalidSpiderName" => "请提供有效爬虫名称......",
             "prepareSpiderDirectory" => "开始准备新爬虫目录: ",
@@ -560,6 +574,7 @@ class Language
             "caughtUnexpectedProblem" => "删除爬虫时发生了意外",
             "refusedToDropBuiltInApp" => "拒绝删内置默认应用: ",
             "refusedToDropRunningApp" => "拒绝删运行中的应用: ",
+            "showAppList" => "当前已经存在的爬虫应用如下:",
         );
 
         if(!array_key_exists($key, $lang)) return '';
@@ -578,7 +593,7 @@ class Language
     {
         $lang = array(
             "welcome" => "welcome to use PHPCreeper Application Assistant......",
-            "contactAuthor" => "feel free to contact blogdaren@163.com if any question......",
+            "contactAuthor" => "feel free to contact blogdaren@163.com for any question......",
             "checkSpider" => "prepare to check the spider data......",
             "invalidSpiderName" => "please provide valid spider name ......",
             "prepareSpiderDirectory" => "prepare spider directory: ",
@@ -607,6 +622,7 @@ class Language
             "caughtUnexpectedProblem" => "some unexpected problem occured when try to drop spider",
             "refusedToDropBuiltInApp" => "refused to drop the built-in spider app: ",
             "refusedToDropRunningApp" => "refused to drop the running spider app: ",
+            "showAppList" => "try to show the App list being used: ",
         );
 
         if(!array_key_exists($key, $lang)) return '';

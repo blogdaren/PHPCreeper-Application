@@ -7,7 +7,7 @@
  * @modify   2019-10-24
  */
 
-namespace PHPCreeperApp\Spider\Baidu\Start;
+namespace PHPCreeperApp\Spider\Demo\Start;
 
 require_once dirname(__FILE__, 4) . '/Core/Launcher.php';
 

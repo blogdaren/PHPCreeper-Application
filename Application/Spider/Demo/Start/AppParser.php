@@ -7,7 +7,7 @@
  * @modify   2019-10-24
  */
 
-namespace PHPCreeperApp\Spider\Baidu\Start;
+namespace PHPCreeperApp\Spider\Demo\Start;
 
 require_once dirname(__FILE__, 4) . '/Core/Launcher.php';
 
@@ -101,10 +101,10 @@ class AppParser
         //$db = $producer->getDbo('test');
         $html = "<div><a href='http://www.phpcreeper.com' id='site'>PHPCreeper</a></div>";
         $rule = array(
-            '链接标签' => ['div', 'html'],
-            '链接文本' => ['#site', 'text'],
-            '链接地址' => ['#site', 'href'],
-            '回调函数' => ['/<a .*?>(.*)<\/a>/is', 'preg', [], function($field_name, $data){
+            '测试链接标签' => ['div', 'html'],
+            '测试链接文本' => ['#site', 'text'],
+            '测试链接地址' => ['#site', 'href'],
+            '测试回调函数' => ['/<a .*?>(.*)<\/a>/is', 'preg', [], function($field_name, $data){
                 return 'Hello ' . $data[1];
             }],
         );
