@@ -24,13 +24,6 @@ class Launcher
     static private $_instance = null;
 
     /**
-     * launcher config
-     *
-     * @var array 
-     */
-    static private $_config = [];
-
-    /**
      * @brief    __construct    
      *
      * @return   void
@@ -64,29 +57,25 @@ class Launcher
         $spider = self::getSpiderName($name);
         $appworker = self::getAppWorker();
 
-        //if(empty(self::$_config))
-        //{
-            $global_config_file = APP_DIR . '/Spider/' . $spider . '/Config/global.php';
-            if(!is_file($global_config_file) || !file_exists($global_config_file))
-            {
-                PHPCreeper::showHelpByeBye("global config file not found: {$global_config_file}");
-            }
-            $global_config = require $global_config_file;
+        $global_config_file = APP_DIR . '/Spider/' . $spider . '/Config/global.php';
+        if(!is_file($global_config_file) || !file_exists($global_config_file))
+        {
+            PHPCreeper::showHelpByeBye("global config file not found: {$global_config_file}");
+        }
+        $global_config = require $global_config_file;
 
-            $appworker_config[$appworker] = [];
-            $appworker_config_file = APP_DIR . '/Spider/' . $spider . "/Config/{$appworker}.php";
-            if(is_file($appworker_config_file) && file_exists($appworker_config_file))
-            {
-                $appworker_config[$appworker] = require $appworker_config_file;
-            }
-            unset($appworker_config['Launcher']);
+        $appworker_config[$appworker] = [];
+        $appworker_config_file = APP_DIR . '/Spider/' . $spider . "/Config/{$appworker}.php";
+        if(is_file($appworker_config_file) && file_exists($appworker_config_file))
+        {
+            $appworker_config[$appworker] = require $appworker_config_file;
+        }
+        unset($appworker_config['Launcher']);
 
-            self::$_config = array_merge($global_config, $appworker_config);
-        //}
+        $config = array_merge($global_config, $appworker_config);
+        $config['main']['appworker'] = $appworker;
 
-        self::$_config['main']['appworker'] = $appworker;
-
-        return self::$_config;
+        return $config;
     }
 
     /**
@@ -120,19 +109,19 @@ class Launcher
             $scripts[] = pathinfo($start_file, PATHINFO_FILENAME);
         }
 
-        //set config
-        self::$_config = self::getSpiderConfig($name);
+        //get config
+        $config = self::getSpiderConfig($name);
 
         //when configure run as single worker
-        if(isset(self::$_config['main']['multi_worker']) && false === self::$_config['main']['multi_worker'])
+        if(isset($config['main']['multi_worker']) && false === $config['main']['multi_worker'])
         {
             return ['AppDownloader'];
         }
 
-        //when configure run as multi worker
+        //unset extra worker if configure run as multi worker
         foreach($scripts as $key => $script)
         {
-            if(isset(self::$_config['main']['start'][$script]) && false === self::$_config['main']['start'][$script])
+            if(isset($config['main']['start'][$script]) && false === $config['main']['start'][$script])
             {
                 unset($scripts[array_search($script, $scripts)]);
             }
@@ -179,7 +168,7 @@ class Launcher
             require_once $start_file;
         }
 
-        PHPCreeper::runAll();
+        PHPCreeper::start();
     }
 
     /**
