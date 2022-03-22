@@ -54,14 +54,14 @@ class AppProducer
      *
      * @return   mixed
      */
-    public function start($spider = '')
+    public function start($config)
     {
         //producer instance
-        $this->_producer = new Producer();
+        $this->_producer = new Producer($config);
 
         //producer config
-        $config = Launcher::getSpiderConfig($spider);
-        $this->_producer->setConfig($config);
+        //$config = Launcher::getSpiderConfig($spider);
+        //$this->_producer->setConfig($config);
 
         //producer name
         $this->_producer->setName('producer1');
@@ -73,6 +73,20 @@ class AppProducer
         $this->_producer->onProducerStart   = array($this, 'onProducerStart');
         $this->_producer->onProducerStop    = array($this, 'onProducerStop');
         $this->_producer->onProducerReload  = array($this, 'onProducerReload');
+
+
+        //$this->_producer2 = new Producer();
+        //$config['AppProducer']['count'] = 3;
+        //$this->_producer2->setConfig($config);
+        //$this->_producer2->setName('producer2');
+        //$this->_producer2->setCount(2);
+
+        //$this->_producer3 = new Producer();
+        //$config['AppProducer']['count'] = 3;
+        //$this->_producer3->setConfig([]);
+        //$this->_producer3->setName('producer3');
+        //$this->_producer2->setCount(2);
+
     }
 
 
@@ -113,11 +127,18 @@ class AppProducer
 
 
 
-//start producer
-AppProducer::getInstance()->start($spider ?? getSpiderName());
+//!!! WARN: DON'T CHANGE THE CODES BELOW ALL !!!
+//!!! WARN: DON'T CHANGE THE CODES BELOW ALL !!!
+//!!! WARN: DON'T CHANGE THE CODES BELOW ALL !!!
+if(!defined('GLOBAL_START'))  
+{
+    $classname = pathinfo(__FILE__, PATHINFO_FILENAME);
+    $config = Launcher::getSpiderConfig($spider ?? getSpiderName(), $classname);
+    $_classname = __NAMESPACE__ . "\\" . $classname;
+    $_classname::getInstance()->start($config);
+    PHPCreeper::start();
+}
 
-//run all phpcreeper instance
-!defined('GLOBAL_START') && PHPCreeper::start();
 
 
 

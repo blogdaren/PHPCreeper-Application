@@ -65,14 +65,10 @@ class AppParser
      *
      * @return   mixed
      */
-    public function start($spider = '')
+    public function start($config = [])
     {
         //parser instance
-        $this->_parser = new Parser();
-
-        //parser config
-        $config = Launcher::getSpiderConfig($spider);
-        $this->_parser->setConfig($config);
+        $this->_parser = new Parser($config);
 
         //parser name
         $this->_parser->setName('parser1');
@@ -188,11 +184,17 @@ class AppParser
 
 
 
-//start parser
-AppParser::getInstance()->start($spider ?? getSpiderName());
-
-//run all phpcreeper instance
-!defined('GLOBAL_START') && PHPCreeper::start();
+//!!! WARN: DON'T CHANGE THE CODES BELOW ALL !!!
+//!!! WARN: DON'T CHANGE THE CODES BELOW ALL !!!
+//!!! WARN: DON'T CHANGE THE CODES BELOW ALL !!!
+if(!defined('GLOBAL_START'))  
+{
+    $classname = pathinfo(__FILE__, PATHINFO_FILENAME);
+    $config = Launcher::getSpiderConfig($spider ?? getSpiderName(), $classname);
+    $_classname = __NAMESPACE__ . "\\" . $classname;
+    $_classname::getInstance()->start($config);
+    PHPCreeper::start();
+}
 
 
 

@@ -52,33 +52,40 @@ class Launcher
      *
      * @return   array
      */
-    static public function getSpiderConfig($name = '')
+    static public function getSpiderConfig($name = '', $appworker = '')
     {
         $spider = self::getSpiderName($name);
-        $appworker = self::getAppWorker();
+        //$appworker = self::getAppWorker();
 
         $global_config_file = APP_DIR . '/Spider/' . $spider . '/Config/global.php';
         if(!is_file($global_config_file) || !file_exists($global_config_file))
         {
             PHPCreeper::showHelpByeBye("global config file not found: {$global_config_file}");
         }
+
         $global_config = require $global_config_file;
+        $appworker_config = [];
 
-        $appworker_config[$appworker] = [];
-        $appworker_config_file = APP_DIR . '/Spider/' . $spider . "/Config/{$appworker}.php";
-        if(is_file($appworker_config_file) && file_exists($appworker_config_file))
+        if(!empty($appworker))
         {
-            $appworker_config[$appworker] = require $appworker_config_file;
-        }
-        unset($appworker_config['Launcher']);
+            $appworker_config[$appworker] = [];
+            $appworker_config_file = APP_DIR . '/Spider/' . $spider . "/Config/{$appworker}.php";
+            if(is_file($appworker_config_file) && file_exists($appworker_config_file))
+            {
+                $appworker_config[$appworker] = require $appworker_config_file;
+            }
+            unset($appworker_config['Launcher']);
 
-        $config = array_merge($global_config, $appworker_config);
-        $config['main']['appworker'] = $appworker;
+            $config = array_merge($global_config, $appworker_config);
+            $config['main']['appworker'] = $appworker;
+        }
 
         return $config;
     }
 
     /**
+     * @deprecated !!!
+     *
      * @brief    get app worker  
      *
      * @return   string
@@ -139,16 +146,17 @@ class Launcher
      */
     static public function start($name = '')
     {
+        //get spider name
         $spider = self::getSpiderName($name);
         empty($spider) && PHPCreeper::showHelpByeBye('please give the valid spider name, try to read the manual if feel puzzled.');
 
         //must mark this script run as global
         define('GLOBAL_START', 1);
 
-        $flag = false;
         $scripts = self::getStartScript($spider);
         empty($scripts) && PHPCreeper::showHelpByeBye('all the start scripts seem to be disabled, please check the `main` config file.');
 
+        $flag = false;
         foreach($scripts as $script)
         {
             $script = APP_DIR . "/Spider/{$spider}/Start/{$script}.php";
@@ -161,11 +169,21 @@ class Launcher
 
         false === $flag && PHPCreeper::showHelpByeBye("couldn't find the start script: {$script}");
 
-        $scripts = implode(',', $scripts);
+        /*
+         *$scripts = implode(',', $scripts);
+         *foreach(glob(APP_DIR . '/Spider/' . $spider. '/Start/{' . $scripts .'}.php', GLOB_BRACE) as $start_file)
+         *{
+         *    require_once $start_file;
+         *}
+         */
 
-        foreach(glob(APP_DIR . '/Spider/' . $spider. '/Start/{' . $scripts .'}.php', GLOB_BRACE) as $start_file)
+        foreach($scripts as $script)
         {
-            require_once $start_file;
+            $start_script = APP_DIR . "/Spider/{$spider}/Start/{$script}.php";
+            require_once $start_script;
+            $config = self::getSpiderConfig($spider, $script);
+            $_classname = "\\PHPCreeperApp\Spider\\$spider\Start\\$script";
+            $_classname::getInstance()->start($config);
         }
 
         PHPCreeper::start();

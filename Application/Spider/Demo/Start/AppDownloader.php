@@ -52,14 +52,10 @@ class AppDownloader
      *
      * @return   mixed
      */
-    public function start($spider = '')
+    public function start($config)
     {
         //downloader instance
-        $this->_downloader = new Downloader();
-
-        //downloader config
-        $config = Launcher::getSpiderConfig($spider);
-        $this->_downloader->setConfig($config);
+        $this->_downloader = new Downloader($config);
 
         //downloader name
         $this->_downloader->setName('downloader1');
@@ -220,11 +216,17 @@ class AppDownloader
 
 
 
-//start downloader
-AppDownloader::getInstance()->start($spider ?? getSpiderName());
-
-//run all phpcreeper instance
-!defined('GLOBAL_START') && PHPCreeper::start();
+//!!! WARN: DON'T CHANGE THE CODES BELOW ALL !!!
+//!!! WARN: DON'T CHANGE THE CODES BELOW ALL !!!
+//!!! WARN: DON'T CHANGE THE CODES BELOW ALL !!!
+if(!defined('GLOBAL_START'))  
+{
+    $classname = pathinfo(__FILE__, PATHINFO_FILENAME);
+    $config = Launcher::getSpiderConfig($spider ?? getSpiderName(), $classname);
+    $_classname = __NAMESPACE__ . "\\" . $classname;
+    $_classname::getInstance()->start($config);
+    PHPCreeper::start();
+}
 
 
 

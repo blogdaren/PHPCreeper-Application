@@ -7,7 +7,7 @@
  * @modify   2019-10-24
  */
 
-namespace PHPCreeperApp\Spider\Weather\Start;
+namespace PHPCreeperApp\Spider\Demo\Start;
 
 require_once dirname(__FILE__, 4) . '/Core/Launcher.php';
 
@@ -54,14 +54,10 @@ class AppServer
      *
      * @return   mixed
      */
-    public function start($spider = '')
+    public function start($config)
     {
         //server instance
-        $this->_server = new Server();
-
-        //server config
-        $config = Launcher::getSpiderConfig($spider);
-        $this->_server->setConfig($config);
+        $this->_server = new Server($config);
 
         //server name
         $this->_server->setName('server1');
@@ -141,11 +137,14 @@ class AppServer
 
 
 
-//start server
-AppServer::getInstance()->start($spider ?? getSpiderName());
-
-//run all phpcreeper instance
-!defined('GLOBAL_START') && PHPCreeper::start();
-
-
-
+//!!! WARN: DON'T CHANGE THE CODES BELOW ALL !!!
+//!!! WARN: DON'T CHANGE THE CODES BELOW ALL !!!
+//!!! WARN: DON'T CHANGE THE CODES BELOW ALL !!!
+if(!defined('GLOBAL_START'))  
+{
+    $classname = pathinfo(__FILE__, PATHINFO_FILENAME);
+    $config = Launcher::getSpiderConfig($spider ?? getSpiderName(), $classname);
+    $_classname = __NAMESPACE__ . "\\" . $classname;
+    $_classname::getInstance()->start($config);
+    PHPCreeper::start();
+}

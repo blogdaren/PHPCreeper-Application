@@ -14,6 +14,7 @@ return array(
         //'AppProducer'      => false,
         //'AppDownloader'    => false,
         //'AppParser'        => false,
+        //'AppServer'        => false,
     ),
     'task' => array(
         'method'          => 'get',
