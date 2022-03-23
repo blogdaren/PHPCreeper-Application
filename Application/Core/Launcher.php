@@ -77,10 +77,10 @@ class Launcher
             }
 
             if(isset($appworker_config['Launcher'])) unset($appworker_config['Launcher']);
-
-            $config = array_merge($global_config, $appworker_config);
-            $config['main']['appworker'] = $appworker;
         }
+
+        $config = array_merge($global_config, $appworker_config);
+        $config['main']['appworker'] = $appworker;
 
         return $config;
     }
