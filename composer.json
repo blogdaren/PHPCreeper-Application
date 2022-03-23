@@ -22,6 +22,5 @@
     },
     "require": {
         "blogdaren/phpcreeper": "^1.2"
-    },
-    "minimum-stability": "dev"
+    }
 }
