@@ -64,17 +64,19 @@ class Launcher
         }
 
         $global_config = require $global_config_file;
-        $appworker_config = [];
+        $config = $appworker_config = [];
 
         if(!empty($appworker))
         {
             $appworker_config[$appworker] = [];
             $appworker_config_file = APP_DIR . '/Spider/' . $spider . "/Config/{$appworker}.php";
+
             if(is_file($appworker_config_file) && file_exists($appworker_config_file))
             {
                 $appworker_config[$appworker] = require $appworker_config_file;
             }
-            unset($appworker_config['Launcher']);
+
+            if(isset($appworker_config['Launcher'])) unset($appworker_config['Launcher']);
 
             $config = array_merge($global_config, $appworker_config);
             $config['main']['appworker'] = $appworker;
