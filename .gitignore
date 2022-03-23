@@ -1,3 +1,4 @@
+*.dist
 *.log
 *.pid
 .idea

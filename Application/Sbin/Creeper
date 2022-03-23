@@ -511,7 +511,7 @@ class Creeper
  * @script   " . self::$spider . ".php" . "
  * @brief    global.start.script
  * @author   blogdaren<blogdaren@163.com>
- * @version  1.0.3
+ * @version  1.0.5
  * @modify   " . date('Y-m-d') . "
  */
 require_once __DIR__ . '/Application/Core/Launcher.php';

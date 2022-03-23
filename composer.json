@@ -1,7 +1,9 @@
 {
     "name": "blogdaren/phpcreeper-application",
-    "description": "phpcreeper application framework",
     "type": "project",
+    "keywords": ["spider", "crawler", "multi-process", "event-loop", "asynchronous"],
+    "homepage": "http://www.phpcreeper.com",
+    "description": "A Special Application Framework For PHPCreeper",
     "license": "MIT",
     "authors": [
         {
@@ -9,9 +11,17 @@
             "email": "blogdaren@163.com"
         }
     ],
+    "support": {
+        "wiki": "http://www.phpcreeper.com/docs/",
+        "source": "https://github.com/blogdaren/PHPCreeper"
+    },
     "autoload": {
         "psr-4": {
-            "PHPCreeperApp\\"  : "Application/"
+            "PHPCreeperApp\\"    : "Application/"
         }
-    }
+    },
+    "require": {
+        "blogdaren/phpcreeper": "^1.2"
+    },
+    "minimum-stability": "dev"
 }
