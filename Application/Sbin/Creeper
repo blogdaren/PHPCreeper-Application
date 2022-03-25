@@ -222,7 +222,6 @@ class Creeper
 
                 foreach(glob($dst_dir . "/Start/*.php", GLOB_BRACE) as $start_file)
                 {   
-                    $start_files[] = $start_file;
                     file_put_contents($start_file, str_replace('Demo', self::$spider, file_get_contents($start_file)));
                 } 
 
