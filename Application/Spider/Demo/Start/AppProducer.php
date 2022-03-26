@@ -1,10 +1,10 @@
 <?php 
 /**
  * @script   producer.php
- * @brief    the start script for producer 
+ * @brief    single start script for producer 
  * @author   blogdaren<blogdaren@163.com>
- * @version  1.0.0
- * @modify   2019-10-24
+ * @version  1.0.5
+ * @modify   2022-03-26
  */
 
 namespace PHPCreeperApp\Spider\Demo\Start;
@@ -56,37 +56,19 @@ class AppProducer
      */
     public function start($config)
     {
-        //producer instance
+        //single instance
         $this->_producer = new Producer($config);
 
-        //producer config
-        //$config = Launcher::getSpiderConfig($spider);
-        //$this->_producer->setConfig($config);
-
-        //producer name
+        //set name
         $this->_producer->setName('producer1');
 
-        //producer count
+        //set process number
         $this->_producer->setCount(1);
 
         //set callback
         $this->_producer->onProducerStart   = array($this, 'onProducerStart');
         $this->_producer->onProducerStop    = array($this, 'onProducerStop');
         $this->_producer->onProducerReload  = array($this, 'onProducerReload');
-
-
-        //$this->_producer2 = new Producer();
-        //$config['AppProducer']['count'] = 3;
-        //$this->_producer2->setConfig($config);
-        //$this->_producer2->setName('producer2');
-        //$this->_producer2->setCount(2);
-
-        //$this->_producer3 = new Producer();
-        //$config['AppProducer']['count'] = 3;
-        //$this->_producer3->setConfig([]);
-        //$this->_producer3->setName('producer3');
-        //$this->_producer2->setCount(2);
-
     }
 
 

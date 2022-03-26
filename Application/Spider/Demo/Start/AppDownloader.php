@@ -1,10 +1,10 @@
 <?php 
 /**
  * @script   downloader.php
- * @brief    the start script for downloader 
+ * @brief    single start script for downloader 
  * @author   blogdaren<blogdaren@163.com>
- * @version  1.0.0
- * @modify   2019-10-24
+ * @version  1.0.5
+ * @modify   2022-03-26
  */
 
 namespace PHPCreeperApp\Spider\Demo\Start;
@@ -54,13 +54,13 @@ class AppDownloader
      */
     public function start($config)
     {
-        //downloader instance
+        //single instance
         $this->_downloader = new Downloader($config);
 
-        //downloader name
+        //set name
         $this->_downloader->setName('downloader1');
 
-        //downloader count
+        //set process number
         $this->_downloader->setCount(2);
 
         //set callback
@@ -88,6 +88,7 @@ class AppDownloader
          *pprint($downloader->get('https://www.baidu.com'));
          *return false;
          */
+
 
         //Create One Task
         /*
@@ -200,12 +201,15 @@ class AppDownloader
      */
     public function onAfterDownload($downloader, $download_data, $task)
     {
-        //!!!Attention!!!
-        //in theory, we can do the extract job ethier within this callback 
-        //or with the `AppParser` callback related, but we strongly recommend
-        //that you'd better do it with the `AppParser` callback related. 
-        //bcz the extract job not belongs to here, so called each worker performs its own functions.
-        //however, you must do the extract job here if you run the worker as `SINGLE WORKER` mode.
+        /*
+         * !!!Attention!!!
+         * in theory, we can do the extract job ethier within this callback 
+         * or with the `AppParser` callback related, but we strongly recommend
+         * that you'd better do it with the `AppParser` callback related. 
+         * bcz the extract job not belongs to here, so called each worker performs its own functions.
+         * however, you must do the extract job here when you run the worker as `SINGLE WORKER` mode.
+         * !!!Attention!!!
+         */
 
 
         //$fields = $downloader->extractor->setHtml($download_data)->setRule($task['rule'])->extract(); 

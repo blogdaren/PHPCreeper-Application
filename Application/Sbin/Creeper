@@ -374,7 +374,7 @@ class Creeper
      */
     static public function showVersion()
     {
-        $version = Color::getColorfulText('PHPCreeper Application Assistant Version 1.0.1', 'white', 'blue', 'underline');
+        $version = Color::getColorfulText('PHPCreeper Application Assistant Version 1.0.5', 'white', 'blue', 'underline');
         echo PHP_EOL. $version . PHP_EOL;
     }
 
@@ -397,11 +397,11 @@ class Creeper
     static public function showCommands()
     {
         self::showTitle('Command:');
-        self::showLineKeyAndValue("list",  "    used to list all the spider app made");
-        self::showLineKeyAndValue("make",  "    used to create the given spider app");
-        self::showLineKeyAndValue("drop",  "    used to remove the given spider app");
-        self::showLineKeyAndValue("check", "   used to check  the given spider app");
-        self::showLineKeyAndValue("help",  "    used to display this help message");
+        self::showLineKeyAndValue("list",  "    list all the existing spider app");
+        self::showLineKeyAndValue("make",  "    create the given spider app");
+        self::showLineKeyAndValue("drop",  "    remove the given spider app");
+        self::showLineKeyAndValue("check", "   check  the given spider app");
+        self::showLineKeyAndValue("help",  "    display this help message");
     }
 
     /**
@@ -412,7 +412,7 @@ class Creeper
     static public function showArguments()
     {
         self::showTitle(PHP_EOL . 'Argument:');
-        self::showLineKeyAndValue("name  ", "  used to spicify the spider name" . PHP_EOL);
+        self::showLineKeyAndValue("name  ", "  spicify the spider name" . PHP_EOL);
     }
 
     /**
@@ -423,7 +423,7 @@ class Creeper
     static public function showOptions()
     {
         self::showTitle('Options:');
-        self::showLineKeyAndValue("--zh  ", "  bootstrap as chinese versoin mode");
+        self::showLineKeyAndValue("--zh  ", "  bootstrap as chinese version mode");
         self::showLineKeyAndValue("--en  ", "  bootstrap as english version mode" . PHP_EOL);
     }
 

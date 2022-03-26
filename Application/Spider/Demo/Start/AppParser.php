@@ -3,8 +3,8 @@
  * @script   parser.php
  * @brief    the start script for parser 
  * @author   blogdaren<blogdaren@163.com>
- * @version  1.0.0
- * @modify   2019-10-24
+ * @version  1.0.5
+ * @modify   2022-03-26
  */
 
 namespace PHPCreeperApp\Spider\Demo\Start;
@@ -67,13 +67,13 @@ class AppParser
      */
     public function start($config = [])
     {
-        //parser instance
+        //single instance
         $this->_parser = new Parser($config);
 
-        //parser name
+        //set name
         $this->_parser->setName('parser1');
 
-        //parser count
+        //set process number
         $this->_parser->setCount(3);
 
         //set callback
@@ -141,12 +141,14 @@ class AppParser
      */
     public function onParserMessage($parser, $connection, $download_data)
     {
-        /*$rule = array(
-            'cn_city' => ['dl.basicInfo-left dd.basicInfo-item.value:eq(0)', 'text'],
-            'en_city' => ['dl.basicInfo-left dd.basicInfo-item.value:eq(1)', 'text'],
-        );
-        $data = $parser->extractor->setHtml($download_data)->setRule($rule)->extract();
-        pprint($data);*/
+        /*
+         *$rule = array(
+         *    'cn_city' => ['dl.basicInfo-left dd.basicInfo-item.value:eq(0)', 'text'],
+         *    'en_city' => ['dl.basicInfo-left dd.basicInfo-item.value:eq(1)', 'text'],
+         *);
+         *$data = $parser->extractor->setHtml($download_data)->setRule($rule)->extract();
+         *pprint($data);
+         */
         
         //pprint($download_data, __METHOD__);
     }

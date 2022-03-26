@@ -1,10 +1,10 @@
 <?php 
 /**
  * @script   server.php
- * @brief    the start script for AppServer 
+ * @brief    single start script for AppServer 
  * @author   blogdaren<blogdaren@163.com>
- * @version  1.0.0
- * @modify   2019-10-24
+ * @version  1.0.5
+ * @modify   2012-03-26
  */
 
 namespace PHPCreeperApp\Spider\Demo\Start;
@@ -56,16 +56,16 @@ class AppServer
      */
     public function start($config)
     {
-        //server instance
+        //single instance
         $this->_server = new Server($config);
 
-        //server name
+        //set name
         $this->_server->setName('server1');
 
-        //server count
+        //set process number
         $this->_server->setCount(1);
 
-        //server socket
+        //set server socket
         $this->_server->setServerSocketAddress("text://0.0.0.0:9999");
 
         $this->_server->onServerStart = array($this, 'onServerStart');
@@ -148,3 +148,8 @@ if(!defined('GLOBAL_START'))
     $_classname::getInstance()->start($config);
     PHPCreeper::start();
 }
+
+
+
+
+
