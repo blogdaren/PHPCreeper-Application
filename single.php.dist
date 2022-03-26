@@ -1,0 +1,59 @@
+<?php 
+/**
+ * @script   single.php
+ * @brief    这是脱离爬山虎应用框架的自定义启动脚本:
+ *           $ cp single.php.dist single.php && php single.php 
+ * @author   blogdaren<blogdaren@163.com>
+ * @version  1.0.0
+ * @modify   2022-03-26
+ */
+
+require "./vendor/autoload.php";
+
+use PHPCreeper\Kernel\PHPCreeper;
+use PHPCreeper\Producer;
+use PHPCreeper\Downloader;
+use PHPCreeper\Parser;
+
+//producer instance
+$producer = new Producer;
+$producer->setName('AppProducer')->setCount(1);
+$producer->onProducerStart = function($producer){
+    $task = array(
+        'url' => array(
+            "r1" => "http://www.weather.com.cn/weather/101010100.shtml",
+        ),
+        'rule' => array(
+            "r1" => array(
+                'time' => ['div#7d ul.t.clearfix h1',      'text'],
+                'wea'  => ['div#7d ul.t.clearfix p.wea',   'text'],
+                'tem'  => ['div#7d ul.t.clearfix p.tem',   'text'],
+                'wind' => ['div#7d ul.t.clearfix p.win i', 'text'],
+            ), 
+        ),
+    );
+    $context = [
+        //'cache_enabled'   => true,                              
+        //'cache_directory' => '/tmp/task/download/' . date('Ymd'), 
+    ];
+    $producer->newTaskMan()->setContext($context)->createMultiTask($task);
+};
+
+//downloader instance
+$downloader = new Downloader();
+$downloader->setName('AppDownloader')->setCount(2)->setClientSocketAddress([
+    'ws://127.0.0.1:8888',
+]);
+
+
+//parser instance
+$parser = new Parser();
+$parser->setName('AppParser')->setCount(1);
+$parser->setServerSocketAddress('websocket://0.0.0.0:8888');
+$parser->onParserExtractField = function($parser, $download_data, $fields){
+    pprint($fields);
+};
+
+PHPCreeper::runAll();
+
+
