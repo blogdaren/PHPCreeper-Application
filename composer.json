@@ -1,0 +1,17 @@
+{
+    "name": "blogdaren/phpcreeper-application",
+    "description": "PHPCreeper Application Framework",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "blogdaren",
+            "email": "blogdaren@163.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "PHPCreeperApp\\"    : "Application/"
+        }
+    }
+}
