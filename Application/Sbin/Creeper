@@ -202,7 +202,7 @@ class Creeper
                 $check_result = self::checkSpiderExist();
                 if(true === $check_result) 
                 {
-                    Logger::error(Language::load('spiderAlreadyExisted') . self::$spider);
+                    Logger::warn(Language::load('spiderAlreadyExisted') . self::$spider);
                     echo PHP_EOL;
                     return false;
                 }
@@ -261,7 +261,7 @@ class Creeper
                     return false;
                 }
 
-                if(true === $check_result) Logger::error(Language::load('spiderAlreadyExisted') . self::$spider);
+                if(true === $check_result) Logger::warn(Language::load('spiderAlreadyExisted') . self::$spider);
 
                 if('demo' === strtolower(self::$spider))
                 {
@@ -294,7 +294,7 @@ class Creeper
                     return false;
                 }
 
-                Logger::error(Language::load('dangerDropOperation'));
+                Logger::warn(Language::load('dangerDropOperation'));
                 $op = trim(self::confirm());
                 if('y' != $op) 
                 {
@@ -313,7 +313,7 @@ class Creeper
                     return false;
                 }
 
-                Logger::error(Language::load('dropSpiderSuccess') . self::$spider . PHP_EOL);
+                Logger::info(Language::load('dropSpiderSuccess') . self::$spider . PHP_EOL);
 
                 //Logger::error(Language::load('notSupportForSecurityReason'));
                 //Logger::error(Language::load('tryToCleanByHand') . PHP_EOL);
@@ -327,8 +327,8 @@ class Creeper
                 }
 
                 $check_result = self::checkSpiderExist();
-                if(true !== $check_result) Logger::error(Language::load('spiderNotExisted') . self::$spider . PHP_EOL);
-                if(true === $check_result) Logger::error(Language::load('spiderAlreadyExisted') . self::$spider . PHP_EOL);
+                if(true !== $check_result) Logger::warn(Language::load('spiderNotExisted') . self::$spider . PHP_EOL);
+                if(true === $check_result) Logger::warn(Language::load('spiderAlreadyExisted') . self::$spider . PHP_EOL);
                 break;
             case 'help':
                 self:showHelp();
