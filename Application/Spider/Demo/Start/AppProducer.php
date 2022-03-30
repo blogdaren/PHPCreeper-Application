@@ -1,7 +1,7 @@
 <?php 
 /**
- * @script   producer.php
- * @brief    single start script for producer 
+ * @script   AppProducer.php
+ * @brief    independ start script for AppProducer 
  * @author   blogdaren<blogdaren@163.com>
  * @version  1.0.5
  * @modify   2022-03-26
@@ -35,7 +35,7 @@ class AppProducer
     protected $_producer;
 
     /**
-     * @brief   single instance 
+     * @brief   get single instance 
      *
      * @return  object
      */
@@ -81,7 +81,49 @@ class AppProducer
      */
     public function onProducerStart($producer)
     {
-        //$db = $producer->getDbo('test');
+        //Plugin Usage
+        /*
+         *PHPCreeper::installPlugin(\PHPCreeperApp\Plugin\MyHttpClient::class);
+         *pprint(producer->get('https://www.baidu.com'));
+         *return false;
+         */
+
+
+        //Create One Task
+        /*
+         *$task = array(
+         *    'url' => 'https://baike.baidu.com/item/%E4%B8%8A%E6%B5%B7/114606',
+         *    'rule' => array(
+         *        '目标字段1' => ['dl.basicInfo-right dd.basicInfo-item.value:eq(3)', 'text'],
+         *        '目标字段2' => ['dl.basicInfo-right dd.basicInfo-item.value:eq(4)', 'text'],
+         *    ),
+         *);
+         *producer->newTaskMan()->createTask($task);
+         */
+
+
+        //Create Multi Task
+        /*
+         *$task = array(
+         *    'url' => array(
+         *        'r1' => 'https://baike.baidu.com/item/%E5%8C%97%E4%BA%AC/128981?fr=aladdin',
+         *    ),
+         *    'rule' => array(
+         *        'r1' => array(
+         *            '目标字段1' => ['dl.basicInfo-right dd.basicInfo-item.value:eq(5)', 'text'],
+         *            '目标字段2' => ['dl.basicInfo-right dd.basicInfo-item.value:eq(6)', 'text'],
+         *        ),
+         *    ),
+         *);
+         *producer->newTaskMan()->createMultiTask($task);
+         */
+
+
+        //Create Multi Task
+        /*
+         *$task = Configurator::get('globalConfig/main/task');
+         *producer->newTaskMan()->createMultiTask($task);
+         */
     }
 
     /**

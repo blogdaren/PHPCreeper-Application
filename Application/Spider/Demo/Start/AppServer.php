@@ -1,7 +1,7 @@
 <?php 
 /**
- * @script   server.php
- * @brief    single start script for AppServer 
+ * @script   AppServer.php
+ * @brief    independ start script for AppServer 
  * @author   blogdaren<blogdaren@163.com>
  * @version  1.0.5
  * @modify   2012-03-26
@@ -35,7 +35,7 @@ class AppServer
     protected $_server;
 
     /**
-     * @brief   single instance 
+     * @brief   get single instance 
      *
      * @return  object
      */

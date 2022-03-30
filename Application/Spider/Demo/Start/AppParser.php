@@ -1,7 +1,7 @@
 <?php 
 /**
- * @script   parser.php
- * @brief    the start script for parser 
+ * @script   AppParser.php
+ * @brief    independ start script for AppParser
  * @author   blogdaren<blogdaren@163.com>
  * @version  1.0.5
  * @modify   2022-03-26
@@ -74,7 +74,7 @@ class AppParser
         $this->_parser->setName('parser1');
 
         //set process number
-        $this->_parser->setCount(3);
+        $this->_parser->setCount(2);
 
         //set callback
         $this->_parser->onParserStart   = array($this, 'onParserStart');
@@ -94,18 +94,17 @@ class AppParser
      */
     public function onParserStart($parser)
     {
-        //$db = $producer->getDbo('test');
         $html = "<div><a href='http://www.phpcreeper.com' id='site'>PHPCreeper</a></div>";
         $rule = array(
-            '测试链接标签' => ['div', 'html'],
-            '测试链接文本' => ['#site', 'text'],
-            '测试链接地址' => ['#site', 'href'],
-            '测试回调函数' => ['/<a .*?>(.*)<\/a>/is', 'preg', [], function($field_name, $data){
-                return 'Hello ' . $data[1];
+            '测试提取到的链接标签' => ['div', 'html'],
+            '测试提取到的链接文本' => ['#site', 'text'],
+            '测试提取到的链接地址' => ['#site', 'href'],
+            '测试自定义的回调函数' => ['/<a .*?>(.*)<\/a>/is', 'preg', [], function($field_name, $result){
+                return 'Hello ' . $result[1];
             }],
         );
-        $data = $parser->extractField($html, $rule, 'rule1');
-        pprint($data['rule1']);
+        $data = $parser->extractField($html, $rule, 'rulename1');
+        pprint($data['rulename1']);
     }
 
     /**

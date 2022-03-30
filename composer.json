@@ -13,5 +13,8 @@
         "psr-4": {
             "PHPCreeperApp\\"    : "Application/"
         }
+    },
+    "require": {
+        "blogdaren/phpcreeper": "^1.2"
     }
 }

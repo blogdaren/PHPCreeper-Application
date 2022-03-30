@@ -35,8 +35,8 @@ return array(
 
         //支持其他N多配置参数......
         'context' => array(
-            'cache_enabled'     => false,
-            'cache_directory'   => '/tmp/Cache4PHPCreeper/download/',
+            //'cache_enabled'     => true,
+            //'cache_directory'   => '/tmp/DownloadCache4PHPCreeper/download/',
         ),
    ),
    'logger' => array(

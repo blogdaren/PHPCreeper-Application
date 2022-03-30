@@ -1,7 +1,7 @@
 <?php 
 /**
- * @script   downloader.php
- * @brief    single start script for downloader 
+ * @script   AppDownloader.php
+ * @brief    independ start script for AppDownloader 
  * @author   blogdaren<blogdaren@163.com>
  * @version  1.0.5
  * @modify   2022-03-26
@@ -61,7 +61,7 @@ class AppDownloader
         $this->_downloader->setName('downloader1');
 
         //set process number
-        $this->_downloader->setCount(2);
+        $this->_downloader->setCount(1);
 
         //set callback
         $this->_downloader->onDownloaderStart   = array($this, 'onDownloaderStart');
@@ -82,49 +82,6 @@ class AppDownloader
      */
     public function onDownloaderStart($downloader)
     {
-        //Plugin Usage
-        /*
-         *PHPCreeper::installPlugin(\PHPCreeperApp\Plugin\MyHttpClient::class);
-         *pprint($downloader->get('https://www.baidu.com'));
-         *return false;
-         */
-
-
-        //Create One Task
-        /*
-         *$task = array(
-         *    'url' => 'https://baike.baidu.com/item/%E4%B8%8A%E6%B5%B7/114606',
-         *    'rule' => array(
-         *        '已提取字段1' => ['dl.basicInfo-right dd.basicInfo-item.value:eq(3)', 'text'],
-         *        '已提取字段2' => ['dl.basicInfo-right dd.basicInfo-item.value:eq(4)', 'text'],
-         *    ),
-         *);
-         *$downloader->newTaskMan()->createTask($task);
-         */
-
-
-        //Create Multi Task
-        /*
-         *$task = array(
-         *    'url' => array(
-         *        'r1' => 'https://baike.baidu.com/item/%E5%8C%97%E4%BA%AC/128981?fr=aladdin',
-         *    ),
-         *    'rule' => array(
-         *        'r1' => array(
-         *            '已提取字段1' => ['dl.basicInfo-right dd.basicInfo-item.value:eq(5)', 'text'],
-         *            '已提取字段2' => ['dl.basicInfo-right dd.basicInfo-item.value:eq(6)', 'text'],
-         *        ),
-         *    ),
-         *);
-         *$downloader->newTaskMan()->createMultiTask($task);
-         */
-
-
-        //Create Multi Task
-        /*
-         *$task = Configurator::get('globalConfig/main/task');
-         *$downloader->newTaskMan()->createMultiTask($task);
-         */
     }
 
     /**
