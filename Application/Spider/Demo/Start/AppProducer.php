@@ -97,8 +97,12 @@ class AppProducer
          *        '目标字段1' => ['dl.basicInfo-right dd.basicInfo-item.value:eq(3)', 'text'],
          *        '目标字段2' => ['dl.basicInfo-right dd.basicInfo-item.value:eq(4)', 'text'],
          *    ),
+         *    'context' => array(
+         *        'cache_enabled'     => true,
+         *        'cache_directory'   => '/tmp/DownloadCache4PHPCreeper/download/',
+         *    ),
          *);
-         *producer->newTaskMan()->createTask($task);
+         *$producer->newTaskMan()->createTask($task);
          */
 
 
