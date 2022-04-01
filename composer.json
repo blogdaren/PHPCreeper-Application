@@ -15,6 +15,6 @@
         }
     },
     "require": {
-        "blogdaren/phpcreeper": "^1.2"
+        "blogdaren/phpcreeper": "^1.3"
     }
 }
