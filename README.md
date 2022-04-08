@@ -1,5 +1,9 @@
 # PHPCreeper-Application
 
+## Attention
+This framework will be removed in the near future, and new framework will be born named `PHPCreeperFramework`.     
+**注意：该应用框架即将被废弃，后续计划重构新版框架: `PHPCreeperFramework`**
+
 ## What is it
 
 `PHPCreeper-Application` is a Special Spider Application Framework
