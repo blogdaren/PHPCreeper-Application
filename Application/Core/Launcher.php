@@ -4,7 +4,7 @@
  * @brief    the launcher used to start all application workers
  * @author   blogdaren<blogdaren@163.com>
  * @version  1.0.0
- * @modify   2019-10-24
+ * @modify   2022-04-10
  */
 
 namespace PHPCreeperApp\Core;
@@ -120,12 +120,6 @@ class Launcher
 
         //get config
         $config = self::getSpiderConfig($name);
-
-        //when configure run as single worker
-        if(isset($config['main']['multi_worker']) && false === $config['main']['multi_worker'])
-        {
-            return ['AppDownloader'];
-        }
 
         //unset extra worker if configure run as multi worker
         foreach($scripts as $key => $script)
