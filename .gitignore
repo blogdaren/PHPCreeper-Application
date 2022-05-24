@@ -1,4 +1,5 @@
 *.dist
+*.lock
 *.log
 *.pid
 .idea
