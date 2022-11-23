@@ -11,18 +11,18 @@ This framework will be deprecated in the near future, and new framework will be 
 which works together with [PHPCreeper](https://github.com/blogdaren/phpcreeper), it is mainly used to
 improve your crawling job efficiency.    
 
-`PHPCreeper-Application`是专门针对爬山虎内核研发的配套应用开发框架，旨在提高开发效率.
+`PHPCreeper-Application`是专门针对爬山虎引擎研发的配套应用开发框架，旨在提高开发效率.
 
 ## How to use
 
 There are two ways to know more about this framework:   
 
-* Visit PHPCreeper Manual：[http://www.phpcreeper.com/docs/](http://www.phpcreeper.com/docs/)
-* Visit PHPCreeper Github：[https://github.com/blogdaren/phpcreeper](https://github.com/blogdaren/phpcreeper)
+* Checkout PHPCreeper Manual：[http://www.phpcreeper.com/docs/](http://www.phpcreeper.com/docs/)
+* Checkout PHPCreeper Github：[https://github.com/blogdaren/phpcreeper](https://github.com/blogdaren/phpcreeper)
 
 ## Run built-in demo 
 
-* demo.php.dist是框架自带的爬虫应用Demo的全局启动脚本, 直接体验:   
+* demo.php.dist是爬山虎应用框架自带的应用Demo全局启动脚本, 直接体验:   
 ```
 $ cp demo.php.dist demo.php && php demo.php start  
 ```
