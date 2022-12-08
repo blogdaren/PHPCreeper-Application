@@ -81,7 +81,8 @@ class AppProducer
      */
     public function onProducerStart($producer)
     {
-        //可以单独为每条任务设置独立的context上下文
+        //特别注意：此处是为每条任务设置私有的context上下文，其成员与全局context成员完全相同。
+        //特别注意：全局context与任务私有context最终采用合并覆盖的策略。
         //context上下文成员主要是针对任务设置的，但同时拥有很大灵活性，可以间接影响依赖性服务，
         //比如可以通过设置context上下文成员来影响HTTP请求时的各种上下文参数 (可选项，默认为空)
         //HTTP引擎默认采用Guzzle客户端，兼容支持Guzzle所有的请求参数选项，具体参考Guzzle手册。
