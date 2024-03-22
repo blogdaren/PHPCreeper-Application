@@ -3,8 +3,8 @@
  * @script   global.php
  * @brief    global config
  * @author   blogdaren<blogdaren@163.com>
- * @version  1.0.0
- * @modify   2019-11-20
+ * @link     http://www.phpcreeper.com
+ * @create   2019-11-15
  */
 
 /** !!! hey, don't try to modify this file unless you understand what u are doing !!! **/

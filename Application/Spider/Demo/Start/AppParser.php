@@ -3,8 +3,8 @@
  * @script   AppParser.php
  * @brief    independ start script for AppParser
  * @author   blogdaren<blogdaren@163.com>
- * @version  1.0.5
- * @modify   2022-03-26
+ * @link     http://www.phpcreeper.com 
+ * @create   2022-03-26
  */
 
 namespace PHPCreeperApp\Spider\Demo\Start;
@@ -14,9 +14,6 @@ require_once dirname(__FILE__, 4) . '/Core/Launcher.php';
 use PHPCreeperApp\Core\Launcher;
 use PHPCreeper\Kernel\PHPCreeper;
 use PHPCreeper\Parser;
-use PHPCreeper\Kernel\Library\Helper\Benchmark;
-use Configurator\Configurator;
-use Logger\Logger;
 
 class AppParser
 {
@@ -32,18 +29,6 @@ class AppParser
      *  @var object
      */
     protected $_parser;
-
-    /**
-     *  ping interval
-     *  @var int
-     */
-    public $pingInterval = 0;
-
-    /**
-     *  send ping data to client
-     *  @var string
-     */
-    public $pingData = '';
 
     /**
      * @brief   get single instance 
@@ -70,13 +55,13 @@ class AppParser
         //single instance
         $this->_parser = new Parser($config);
 
-        //set name
+        //set process name
         $this->_parser->setName('parser1');
 
         //set process number
-        $this->_parser->setCount(2);
+        $this->_parser->setCount(1);
 
-        //set callback
+        //set user callback
         $this->_parser->onParserStart   = array($this, 'onParserStart');
         $this->_parser->onParserStop    = array($this, 'onParserStop');
         $this->_parser->onParserReload  = array($this, 'onParserReload');
@@ -94,6 +79,9 @@ class AppParser
      */
     public function onParserStart($parser)
     {
+        //注意：这段测试代码的用法基本用不到，只需要了解还可以这么使用就可以啦.
+        //注意：这段测试代码的用法基本用不到，只需要了解还可以这么使用就可以啦.
+        //注意：这段测试代码的用法基本用不到，只需要了解还可以这么使用就可以啦.
         $html = "<div><a href='http://www.phpcreeper.com' id='site'>PHPCreeper</a></div>";
         $rule = array(
             '测试提取到的链接标签' => ['div', 'html'],
@@ -140,15 +128,6 @@ class AppParser
      */
     public function onParserMessage($parser, $connection, $download_data)
     {
-        /*
-         *$rule = array(
-         *    'cn_city' => ['dl.basicInfo-left dd.basicInfo-item.value:eq(0)', 'text'],
-         *    'en_city' => ['dl.basicInfo-left dd.basicInfo-item.value:eq(1)', 'text'],
-         *);
-         *$data = $parser->extractor->setHtml($download_data)->setRule($rule)->extract();
-         *pprint($data);
-         */
-        
         //pprint($download_data, __METHOD__);
     }
 
@@ -178,9 +157,6 @@ class AppParser
     {
         !empty($fields) && pprint($fields, __METHOD__);
     }
-
-
-
 }
 
 

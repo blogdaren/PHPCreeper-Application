@@ -4,8 +4,8 @@
  * @script   Creeper.php
  * @brief    PHPCreeper Application Assistant
  * @author   blogdaren<blogdaren@163.com>
- * @version  1.0.3
- * @modify   2019-03-19
+ * @link     http://www.phpcreeper.com
+ * @create   2019-03-19
  */
 
 require_once dirname(__FILE__, 2). '/Core/Constant.php';
@@ -504,19 +504,17 @@ class Creeper
      */
     static public function getInitPHPCode()
     {
-        $code = "
-<?php
+        $code = "<?php
 /**
  * @script   " . self::$spider . ".php" . "
  * @brief    global.start.script
  * @author   blogdaren<blogdaren@163.com>
- * @version  1.0.5
- * @modify   " . date('Y-m-d') . "
+ * @link     http://www.phpcreeper.com
+ * @create   " . date('Y-m-d') . "
  */
 require_once __DIR__ . '/Application/Core/Launcher.php';
 
-\PHPCreeperApp\Core\Launcher::start();
-            ";
+\PHPCreeperApp\Core\Launcher::start();";
 
         return $code;
     }
@@ -567,7 +565,7 @@ class Language
             "runCommandLineAllowed" => "只能在命令行运行脚本......",
             "phpVersionInvalid" => "PHP版本必须大于等于7.0.0",
             "toBeImplemented" => "该项功能正在开发中.....",
-            "dangerDropOperation" => "危险行为: 确定要删除吗? 【y|n】",
+            "dangerDropOperation" => "危险行为: 无论如何先备份，确定要删除吗? 【y|n】",
             "discardDropOperation" => "选择放弃: 爬虫应用删除失败",
             "dropSpiderSuccess" => "已经成功删除爬虫应用: ",
             "caughtUnexpectedProblem" => "删除爬虫时发生了意外",

@@ -1,10 +1,10 @@
 <?php
 /**
  * @script   Launcher.php
- * @brief    the launcher used to start all application workers
+ * @brief    core launcher used to start all application workers
  * @author   blogdaren<blogdaren@163.com>
- * @version  1.0.0
- * @modify   2022-04-10
+ * @link     http://www.phpcreeper.com
+ * @create   2022-09-08
  */
 
 namespace PHPCreeperApp\Core;

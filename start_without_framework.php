@@ -1,9 +1,8 @@
 <?php 
 /**
- * @script   start.php
- * @brief    这是脱离爬山虎应用框架的自定义启动脚本:
+ * @script   start_without_framework.php
+ * @brief    这是脱离爬山虎应用框架的应用Demo自定义全局启动脚本
  *
- * @usage    cp single.php.dist single.php && php single.php 
  *
  * 1. 本示例脚本是脱离爬山虎应用框架的自定义启动脚本;
  * 2. 本示例脚本用于模拟抓取未来7天内的天气预报数据;

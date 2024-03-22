@@ -3,8 +3,8 @@
  * @script   AppDownloader.php
  * @brief    independ start script for AppDownloader 
  * @author   blogdaren<blogdaren@163.com>
- * @version  1.0.5
- * @modify   2022-03-26
+ * @link     http://www.phpcreeper.com 
+ * @create   2022-03-26
  */
 
 namespace PHPCreeperApp\Spider\Demo\Start;
@@ -14,8 +14,6 @@ require_once dirname(__FILE__, 4) . '/Core/Launcher.php';
 use PHPCreeperApp\Core\Launcher;
 use PHPCreeper\Kernel\PHPCreeper;
 use PHPCreeper\Downloader;
-use Configurator\Configurator;
-use Logger\Logger;
 
 class AppDownloader
 {
@@ -57,13 +55,13 @@ class AppDownloader
         //single instance
         $this->_downloader = new Downloader($config);
 
-        //set name
+        //set process name
         $this->_downloader->setName('downloader1');
 
         //set process number
         $this->_downloader->setCount(1);
 
-        //set callback
+        //set user callback
         $this->_downloader->onDownloaderStart   = array($this, 'onDownloaderStart');
         $this->_downloader->onDownloaderStop    = array($this, 'onDownloaderStop');
         $this->_downloader->onDownloaderReload  = array($this, 'onDownloaderReload');
@@ -71,6 +69,7 @@ class AppDownloader
         $this->_downloader->onBeforeDownload    = array($this, 'onBeforeDownload');
         $this->_downloader->onStartDownload     = array($this, 'onStartDownload');
         $this->_downloader->onAfterDownload     = array($this, 'onAfterDownload');
+        $this->_downloader->onAfterDownload     = array($this, 'onFailDownload');
     }
 
     /**
@@ -82,6 +81,9 @@ class AppDownloader
      */
     public function onDownloaderStart($downloader)
     {
+        //插件演示
+        //PHPCreeper::installPlugin("PHPCreeperApp\Plugin\MyHttpClient");
+        //pprint($downloader->get("https://www.baidu.com"), __METHOD__);
     }
 
     /**
@@ -169,10 +171,21 @@ class AppDownloader
          */
 
 
-        //$fields = $downloader->extractor->setHtml($download_data)->setRule($task['rule'])->extract(); 
         //pprint(__METHOD__, $fields);
     }
 
+    /**
+     * @brief    onFailDownload
+     *
+     * @param    object $downloader
+     * @param    array  $error
+     * @param    array  $task
+     *
+     * @return   mixed
+     */
+    public function onFailDownload($downloader, $error, $task)
+    {
+    }
 }
 
 

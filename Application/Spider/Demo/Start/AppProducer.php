@@ -3,8 +3,8 @@
  * @script   AppProducer.php
  * @brief    independ start script for AppProducer 
  * @author   blogdaren<blogdaren@163.com>
- * @version  1.0.5
- * @modify   2022-03-26
+ * @link     http://www.phpcreeper.com 
+ * @create   2022-03-26
  */
 
 namespace PHPCreeperApp\Spider\Demo\Start;
@@ -14,9 +14,6 @@ require_once dirname(__FILE__, 4) . '/Core/Launcher.php';
 use PHPCreeperApp\Core\Launcher;
 use PHPCreeper\Kernel\PHPCreeper;
 use PHPCreeper\Producer;
-use PHPCreeper\Kernel\Task;
-use Configurator\Configurator;
-use Logger\Logger;
 
 class AppProducer
 {
@@ -59,13 +56,13 @@ class AppProducer
         //single instance
         $this->_producer = new Producer($config);
 
-        //set name
+        //set process name
         $this->_producer->setName('producer1');
 
         //set process number
         $this->_producer->setCount(1);
 
-        //set callback
+        //set user callback
         $this->_producer->onProducerStart   = array($this, 'onProducerStart');
         $this->_producer->onProducerStop    = array($this, 'onProducerStop');
         $this->_producer->onProducerReload  = array($this, 'onProducerReload');
@@ -88,10 +85,10 @@ class AppProducer
         //HTTP引擎默认采用Guzzle客户端，兼容支持Guzzle所有的请求参数选项，具体参考Guzzle手册。
         //特别注意：个别上下文成员的用法是和Guzzle官方不一致的，一方面主要就是屏蔽其技术性概念，
         //另一方面面向开发者来说，关注点主要是能进行简单的配置即可，所以不一致的会注释特别说明。
-        $context = [
+        $task_private_context = [
             //要不要缓存下载文件 [默认false]
             'cache_enabled'   => false,
-            'cache_directory' => '/tmp/DownloadCache4PHPCreeper/download/',
+            'cache_directory' => sys_get_temp_dir() . '/DownloadCache4PHPCreeper/',
             //在特定的生命周期内是否允许重复抓取同一个URL资源 [默认false]
             'allow_url_repeat' => true,
             //要不要跟踪完整的HTTP请求参数，开启后终端会显示完整的请求参数 [默认false]
@@ -144,13 +141,12 @@ class AppProducer
                 'time' => ['div#7d ul.t.clearfix h1',      'text'],
                 'wea'  => ['div#7d ul.t.clearfix p.wea',   'text'],
                 'tem'  => ['div#7d ul.t.clearfix p.tem',   'text'],
-                'wind' => ['div#7d ul.t.clearfix p.win i', 'text'],
             ), 
             'rule_name' =>  '',     //如果留空将使用md5($task_id)作为规则名
             'refer'     =>  '',
             'type'      =>  'text', //可以自由设定类型
             'method'    =>  'get',
-            "context"   =>  $context,
+            "context"   =>  $task_private_context,
         );
         $producer->createTask($task);
         $producer->createMultiTask($task);
@@ -164,10 +160,9 @@ class AppProducer
                     'time' => ['div#7d ul.t.clearfix h1',      'text'],
                     'wea'  => ['div#7d ul.t.clearfix p.wea',   'text'],
                     'tem'  => ['div#7d ul.t.clearfix p.tem',   'text'],
-                    'wind' => ['div#7d ul.t.clearfix p.win i', 'text'],
                 ), 
                 //'rule_name' => 'r1', //如果留空将使用md5($task_id)作为规则名
-                "context" => $context,
+                "context" => $task_private_context,
             ),
             array(
                 "url" => "http://www.weather.com.cn/weather/201010100.shtml",
@@ -175,10 +170,9 @@ class AppProducer
                     'time' => ['div#7d ul.t.clearfix h1',      'text'],
                     'wea'  => ['div#7d ul.t.clearfix p.wea',   'text'],
                     'tem'  => ['div#7d ul.t.clearfix p.tem',   'text'],
-                    'wind' => ['div#7d ul.t.clearfix p.win i', 'text'],
                 ), 
                 //'rule_name' => 'r2', //如果留空将使用md5($task_id)作为规则名
-                "context" => $context,
+                "context" => $task_private_context,
             ),
         );
         $producer->createMultiTask($task);
@@ -186,7 +180,7 @@ class AppProducer
         //以下是旧版本OOP风格的单任务创建API：可继续使用
         $_task['url'] = "http://www.demo5.com";
         $producer->newTaskMan()->setUrl($_task['url'])->setRule($_task['rule'])
-                 ->setContext($context)->createTask();
+                 ->setContext($task_private_context)->createTask();
 
         //以下是旧版本OOP风格的多任务创建API：不推荐使用
         $_task['url'] = "http://www.demo6.com";
