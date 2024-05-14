@@ -135,13 +135,13 @@ class AppParser
      * @brief    onParserFindUrl
      *
      * @param    object $parser
-     * @param    string $url
+     * @param    string $sub_url
      *
      * @return   mixed 
      */
-    public function onParserFindUrl($parser, $url)
+    public function onParserFindUrl($parser, $sub_url)
     {
-        return $url;
+        return $sub_url;
     }
 
     /**

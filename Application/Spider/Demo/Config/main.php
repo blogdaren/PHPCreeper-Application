@@ -19,7 +19,6 @@ return array(
     //全局任务配置参数
     'task' => array(
         'crawl_interval'  => 1,    //任务爬取间隔，单位秒，最小支持0.001秒 (可选项，默认1秒)
-        'max_depth'       => 1,    //最大爬取深度, 0代表爬取深度无限制 (可选项，默认1)
         'max_number'      => 0,    //任务队列最大task数量, 0代表无限制 (可选项，默认0)
         'max_request'     => 0,    //当前Socket连接累计最大请求数，0代表无限制 (可选项，默认0)
         //根据预期任务总量和误判率引擎会自动计算布隆过滤器最优的bitmap长度以及hash函数的个数
@@ -44,8 +43,8 @@ return array(
    //初始任务配置参数：既支持一维数组形式的单任务，也支持二维数组形式的多任务
    //初始任务是模拟抓取百度热搜榜新闻标题
    'task_init' => array(
-        'active' => true,   //激活或冻结当前任务，冻结后任务将会被直接丢弃
-        'url' => 'https://top.baidu.com/board',
+        'active' => true,    //激活或冻结当前任务，冻结后任务将会被直接丢弃
+        'url'    => 'https://top.baidu.com/board',
         'method' => 'get',
         'type'   => 'text',  //类型自由定制
         'rule_name' => 'r1', //如果留空将使用md5($task_id)作为规则名

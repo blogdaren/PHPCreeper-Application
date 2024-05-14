@@ -70,6 +70,7 @@ class AppDownloader
         $this->_downloader->onStartDownload     = array($this, 'onStartDownload');
         $this->_downloader->onAfterDownload     = array($this, 'onAfterDownload');
         $this->_downloader->onAfterDownload     = array($this, 'onFailDownload');
+        $this->_downloader->onAfterDownload     = array($this, 'onTaskEmpty');
     }
 
     /**
@@ -134,7 +135,7 @@ class AppDownloader
         //$downloader->httpClient->setConnectTimeout(3);
         //$downloader->httpClient->setTransferTimeout(10);
         //$downloader->httpClient->setHeaders(array());
-        //$downloader->httpClient->setProxy('http://180.153.144.138:8800');
+        //$downloader->httpClient->setProxy('http://127.0.0.1:8800');
     }
 
     /**
@@ -184,6 +185,17 @@ class AppDownloader
      * @return   mixed
      */
     public function onFailDownload($downloader, $error, $task)
+    {
+    }
+
+    /**
+     * @brief    onTaskEmpty    
+     *
+     * @param    object $downloader
+     *
+     * @return   mixed
+     */
+    public function onTaskEmpty($downloader)
     {
     }
 }

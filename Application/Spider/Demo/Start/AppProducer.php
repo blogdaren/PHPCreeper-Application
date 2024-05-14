@@ -85,32 +85,57 @@ class AppProducer
         //HTTP引擎默认采用Guzzle客户端，兼容支持Guzzle所有的请求参数选项，具体参考Guzzle手册。
         //特别注意：个别上下文成员的用法是和Guzzle官方不一致的，一方面主要就是屏蔽其技术性概念，
         //另一方面面向开发者来说，关注点主要是能进行简单的配置即可，所以不一致的会注释特别说明。
-        $task_private_context = [
+        $private_task_context = [
             //要不要缓存下载文件 [默认false]
             'cache_enabled'   => false,
+
+            //缓存下载数据存放目录  (可选项，默认位于系统临时目录下)
             'cache_directory' => sys_get_temp_dir() . '/DownloadCache4PHPCreeper/',
+
             //在特定的生命周期内是否允许重复抓取同一个URL资源 [默认false]
             'allow_url_repeat' => true,
+
             //要不要跟踪完整的HTTP请求参数，开启后终端会显示完整的请求参数 [默认false]
             'track_request_args' => true,
+
             //要不要跟踪完整的TASK数据包，开启后终端会显示完整的任务数据包 [默认false]
             'track_task_package' => true,
+
             //在v1.6.0之前，如果rulename留空，默认会使用 md5($task_url)作为rulename
             //自v1.6.0开始，如果rulename留空，默认会使用 md5($task_id) 作为rulename
             //所以这个配置参数是仅仅为了保持向下兼容，但是不推荐使用，因为有潜在隐患
             //换句话如果使用的是v1.6.0之前旧版本，那么才有可能需要激活本参数 [默认false]
             'force_use_md5url_if_rulename_empty' => false,
+
             //强制使用多任务创建API的旧版本参数风格，保持向下兼容，不再推荐使用 [默认false]
             'force_use_old_style_multitask_args' => false,
+
+            //设置http请求头：默认引擎会自动伪装成常见的各种随机User-Agent
+            'headers' => [
+                //'User-Agent' => 'Mozilla/5.0 Chrome/124.0.0.0 Safari/537.36',
+                //'Accept'     => 'text/html,*/*',
+            ],
+
             //cookies成员的配置格式和guzzle官方不大一样，屏蔽了cookieJar，取值[false|array]
             'cookies' => [
                 //'domain' => 'domain.com',
                 //'k1' => 'v1',
                 //'k2' => 'v2',
             ],
+
+            //无头浏览器，如果是动态页面考虑启用，否则应当禁用 [默认使用chrome且为禁用状态]
+            //更多其他无头参数详见手册[常见问题]章节
+            'headless_browser' => ['headless' => false],
+
+            //要不要提取子URL，注意提取成功后并不会入队，
+            //可配合onParserFindUrl回调API自行入队[默认true]
+            'extract_sub_url'  => true,
+
             //除了内置参数之外，还可以自由配置自定义参数，在上下游业务链应用场景中十分有用
             'user_define_arg1' => 'user_define_value1',
             'user_define_arg2' => 'user_define_value2',
+
+            //更多其他上下文参数详见手册[应用配置]和[常见问题]章节
         ];
 
 
@@ -129,13 +154,13 @@ class AppProducer
 
 
         //使用字符串：不推荐使用，配置受限，需要自行处理抓取结果
-        $task = "http://www.weather.com.cn/weather/101010100.shtml";
+        //$task = "http://www.weather.com.cn/weather/101010100.shtml";
         //$producer->createTask($task);
         //$producer->createMultiTask($task);
 
 
         //使用一维数组：推荐使用，配置丰富，引擎内置处理抓取结果
-        $task = $_task = array(
+        $task = array(
             'url' => "http://www.weather.com.cn/weather/101010100.shtml",
             "rule" => array(
                 'time' => ['div#7d ul.t.clearfix h1',      'text'],
@@ -144,9 +169,9 @@ class AppProducer
             ), 
             'rule_name' =>  '',     //如果留空将使用md5($task_id)作为规则名
             'refer'     =>  '',
-            'type'      =>  'text', //可以自由设定类型
+            'type'      =>  'text', //已丧失原本的概念设定,可以自由设定类型
             'method'    =>  'get',
-            "context"   =>  $task_private_context,
+            "context"   =>  $private_task_context,
         );
         $producer->createTask($task);
         $producer->createMultiTask($task);
@@ -162,7 +187,7 @@ class AppProducer
                     'tem'  => ['div#7d ul.t.clearfix p.tem',   'text'],
                 ), 
                 //'rule_name' => 'r1', //如果留空将使用md5($task_id)作为规则名
-                "context" => $task_private_context,
+                "context" => $private_task_context,
             ),
             array(
                 "url" => "http://www.weather.com.cn/weather/201010100.shtml",
@@ -172,19 +197,10 @@ class AppProducer
                     'tem'  => ['div#7d ul.t.clearfix p.tem',   'text'],
                 ), 
                 //'rule_name' => 'r2', //如果留空将使用md5($task_id)作为规则名
-                "context" => $task_private_context,
+                "context" => $private_task_context,
             ),
         );
         $producer->createMultiTask($task);
-
-        //以下是旧版本OOP风格的单任务创建API：可继续使用
-        $_task['url'] = "http://www.demo5.com";
-        $producer->newTaskMan()->setUrl($_task['url'])->setRule($_task['rule'])
-                 ->setContext($task_private_context)->createTask();
-
-        //以下是旧版本OOP风格的多任务创建API：不推荐使用
-        $_task['url'] = "http://www.demo6.com";
-        $producer->newTaskMan()->createMultiTask($_task);
     }
 
     /**
