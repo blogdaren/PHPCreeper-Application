@@ -16,7 +16,6 @@
         }
     },
     "require": {
-        "blogdaren/phpcreeper": ">=1.3",
-        "blogdaren/phpcreeper-application":"dev-master@dev"
+        "blogdaren/phpcreeper": ">=1.3"
     }
 }
