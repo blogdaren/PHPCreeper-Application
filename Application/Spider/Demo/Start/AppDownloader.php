@@ -66,11 +66,12 @@ class AppDownloader
         $this->_downloader->onDownloaderStop    = array($this, 'onDownloaderStop');
         $this->_downloader->onDownloaderReload  = array($this, 'onDownloaderReload');
         $this->_downloader->onDownloaderMessage = array($this, 'onDownloaderMessage');
+        $this->_downloader->onDownloaderConnectToParser = array($this, 'onDownloaderConnectToParser');
         $this->_downloader->onBeforeDownload    = array($this, 'onBeforeDownload');
         $this->_downloader->onStartDownload     = array($this, 'onStartDownload');
         $this->_downloader->onAfterDownload     = array($this, 'onAfterDownload');
-        $this->_downloader->onAfterDownload     = array($this, 'onFailDownload');
-        $this->_downloader->onAfterDownload     = array($this, 'onTaskEmpty');
+        $this->_downloader->onFailDownload      = array($this, 'onFailDownload');
+        $this->_downloader->onTaskEmpty         = array($this, 'onTaskEmpty');
     }
 
     /**
@@ -106,6 +107,17 @@ class AppDownloader
      * @return   mixed
      */
     public function onDownloaderReload($downloader)
+    {
+    }
+
+    /**
+     * @brief    onDownloaderConnectToParser    
+     *
+     * @param    object $connection
+     *
+     * @return   mixed
+     */
+    public function onDownloaderConnectToParser($connection)
     {
     }
 

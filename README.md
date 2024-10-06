@@ -9,7 +9,7 @@ This framework will be deprecated in the near future, and new framework will be 
 
 Well, it's better and safer to pull the latest `PHPCreeper-Application` and `PHPCreeper` package frequently.
 
-**提示：推荐经常拉取最新的PHPCreeper-Application应用开发框架和更新PHPCreeper包，一切向下兼容且安全。**
+**提示：务必拉取最新的PHPCreeper-Application应用开发框架并更新PHPCreeper核心包，一切向下兼容且安全。**
 
 ```$ git pull && composer update blogdaren/phpcreeper```
 
