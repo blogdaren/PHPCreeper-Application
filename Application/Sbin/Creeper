@@ -149,9 +149,16 @@ class Creeper
     {
         Logger::info(Language::load('checkSpider'));
 
-        if(empty(PHPCreeper::checkSpiderName(self::$spider)))
-        {
-            return  Language::load('invalidSpiderName');
+        if(version_compare(PHPCreeper::CURRENT_VERSION, '1.9.6', '>=')){
+            if(empty(PHPCreeper::checkSpiderName(self::$spider)))
+            {
+                return Language::load('invalidSpiderName');
+            }
+        }else{
+            if(!preg_match("/^[a-zA-Z_][a-zA-Z0-9_]{0,29}$/is", self::$spider))
+            {
+                return Language::load('invalidSpiderName');
+            }
         }
 
         return true;
@@ -543,9 +550,9 @@ class Language
     {
         $lang = array(
             "welcome" => "欢迎使用爬山虎应用开发助手......",
-            "contactAuthor" => "有问题请联系: blogdaren@163.com",
+            "contactAuthor" => "有问题请联系虎哥微信: phpcreeper",
             "checkSpider" => "开始校验新爬虫数据......",
-            "invalidSpiderName" => "请提供有效爬虫名称......",
+            "invalidSpiderName" => "请提供有效爬虫名称：只能是数字字母和下划线的任意组合，不能以数字开头且最多30个字符......",
             "prepareSpiderDirectory" => "开始准备新爬虫目录: ",
             "spiderAlreadyExisted" => "该爬虫应用已经存在: ",
             "spiderNotExisted" => "该爬虫应用并不存在: ",
@@ -593,7 +600,7 @@ class Language
             "welcome" => "welcome to use PHPCreeper Application Assistant......",
             "contactAuthor" => "feel free to contact blogdaren@163.com for any question......",
             "checkSpider" => "prepare to check the spider data......",
-            "invalidSpiderName" => "please provide valid spider name ......",
+            "invalidSpiderName" => "please provide valid spider name: can only be any combination of numbers or letters or underscores and can't start with a number, 30 characters at most. ......",
             "prepareSpiderDirectory" => "prepare spider directory: ",
             "spiderAlreadyExisted" => "find out the spider already exists: ",
             "spiderNotExisted" => "find out the spider is not exist：",
