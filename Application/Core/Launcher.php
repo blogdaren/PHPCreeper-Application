@@ -112,7 +112,8 @@ class Launcher
         empty($name) && PHPCreeper::showHelpByeBye('please give the valid spider name, try to read the manual if feel puzzled.');
 
         $scripts = [];
-        foreach(glob(APP_DIR . '/Spider/' . ucfirst(strtolower($name)). '/Start/*.php', GLOB_BRACE) as $start_file)
+        $flags = !defined('GLOB_BRACE') ? 0 : GLOB_BRACE;
+        foreach(glob(APP_DIR . '/Spider/' . ucfirst(strtolower($name)). '/Start/*.php', $flags) as $start_file)
         {
             if(!is_file($start_file) || !file_exists($start_file)) continue;
             $scripts[] = pathinfo($start_file, PATHINFO_FILENAME);
